@@ -1,0 +1,1926 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-page-node-id="qTAzgP1h3z5lVHLt0iIByf" data-dm-ref="1"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>项目交付工作看板（模板）</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    background:#f4f6f9; color:#16181d; line-height:1.6;
+    padding:30px 26px 64px; -webkit-font-smoothing:antialiased;
+  }
+  .wrap { max-width:1500px; margin:0 auto; }
+
+  /* ---------- HEADER ---------- */
+  .head {
+    background:#fff; border:1px solid #e3e7ee; border-radius:14px;
+    padding:22px 28px; margin-bottom:14px;
+    display:flex; justify-content:space-between; align-items:flex-start; gap:24px; flex-wrap:wrap;
+  }
+  .head-l h1 { font-size:23px; font-weight:700; letter-spacing:-.3px; }
+  .head-l .meta { margin-top:7px; font-size:13px; color:#6b7280; display:flex; gap:18px; flex-wrap:wrap; }
+  .head-l .meta b { color:#16181d; font-weight:600; }
+  .guide { background:#f8fafc; border:1px solid #e3e7ee; border-radius:10px; padding:11px 15px; font-size:12px; color:#6b7280; min-width:300px; }
+  .guide .gt { font-size:11.5px; font-weight:700; color:#374151; letter-spacing:.4px; margin-bottom:6px; }
+  .guide div { margin-bottom:3px; }
+  .guide .lg { display:inline-block; width:26px; font-weight:700; color:#2563eb; }
+
+  /* ---------- LAYER ---------- */
+  .layer { background:#fff; border:1px solid #e3e7ee; border-radius:14px; margin-bottom:16px; overflow:hidden; }
+  .layer-h { display:flex; align-items:center; gap:12px; padding:12px 24px; border-bottom:1px solid #eef1f6; flex-wrap:wrap; }
+  .lv { font-size:12px; font-weight:700; color:#fff; border-radius:6px; padding:3px 10px; letter-spacing:.5px; }
+  .l0 .layer-h { background:#1e293b; border-bottom:none; }
+  .l0 .lv { background:#2563eb; }
+  .l1 .layer-h { background:#f8fafc; }
+  .l1 .lv { background:#2563eb; }
+  .l2 .layer-h { background:#f1f5f9; }
+  .l2 .lv { background:#64748b; }
+  .layer-h .who { font-size:14px; font-weight:700; color:#16181d; }
+  .l0 .layer-h .who { color:#fff; }
+  .layer-h .note { font-size:11.5px; color:#94a3b8; margin-left:auto; }
+  .l0 .layer-h .note { color:#cbd5e1; }
+  .layer-b { padding:18px 24px; }
+  .sub-h { display:flex; align-items:center; gap:8px; margin:0 0 10px; }
+  .sub-h .bar { width:3px; height:14px; border-radius:2px; background:#2563eb; }
+  .sub-h h3 { font-size:13.5px; font-weight:700; }
+  .sub-h .hint { font-size:11.5px; color:#9ca3af; }
+  .sub-h.sec { margin-top:22px; padding-top:18px; border-top:1px dashed #eef1f6; }
+
+  /* ---------- VERDICT (L0) ---------- */
+  .status { display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-bottom:16px; }
+  .badge { font-size:15px; font-weight:700; padding:9px 18px; border-radius:9px; border:1px solid; }
+  .badge.y { background:#fefce8; color:#a16207; border-color:#fde047; }
+  .badge.r { background:#fef2f2; color:#b91c1c; border-color:#fecaca; }
+  .badge.g { background:#f0fdf4; color:#15803d; border-color:#bbf7d0; }
+  .status .thr { font-size:12.5px; color:#6b7280; }
+
+  .kpis { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:11px; margin-bottom:16px; }
+  .kpi { background:#fff; border:1px solid #e3e7ee; border-radius:12px; padding:14px 16px; position:relative; overflow:hidden; }
+  .kpi::before { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; }
+  .kpi.g::before { background:#16a34a; } .kpi.b::before { background:#2563eb; }
+  .kpi.a::before { background:#d97706; } .kpi.r::before { background:#dc2626; }
+  .kpi .n { font-size:26px; font-weight:700; letter-spacing:-.5px; line-height:1.15; }
+  .kpi.g .n { color:#15803d; } .kpi.b .n { color:#1d4ed8; }
+  .kpi.a .n { color:#b45309; } .kpi.r .n { color:#b91c1c; }
+  .kpi .l { font-size:12px; color:#6b7280; margin-top:2px; }
+
+  .onething {
+    background:#fffbeb; border:1px solid #fcd34d; border-left:4px solid #d97706;
+    border-radius:10px; padding:14px 18px;
+  }
+  .onething .t { font-size:12px; font-weight:700; color:#b45309; letter-spacing:.5px; }
+  .onething .d { font-size:14px; color:#3f2c07; margin-top:5px; }
+  .onething .d b { background:#fef3c7; padding:1px 5px; border-radius:4px; }
+  .onething .why { font-size:12px; color:#92400e; margin-top:6px; }
+
+  /* ---------- DECISION ---------- */
+  .dec-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); }
+  .dec-i { padding:15px 20px; border-right:1px solid #eef1f6; border-bottom:1px solid #eef1f6; position:relative; }
+  .dec-i.hot { background:#fffdf5; }
+  .dec-i .hd { display:flex; align-items:center; gap:8px; margin-bottom:7px; flex-wrap:wrap; }
+  .dec-i .no { width:22px; height:22px; border-radius:6px; background:#dbeafe; color:#1d4ed8; font-size:12px; font-weight:700; display:flex; align-items:center; justify-content:center; flex:0 0 auto; }
+  .dec-i .t { font-size:13.5px; font-weight:700; }
+  .prio { font-size:10px; font-weight:700; padding:2px 7px; border-radius:5px; background:#dc2626; color:#fff; letter-spacing:.3px; }
+  .dec-i .opt { font-size:12.5px; color:#6b7280; line-height:1.55; margin-bottom:6px; white-space:pre-wrap; }
+  .dec-i .rec { font-size:12.5px; background:#eff6ff; border-left:3px solid #2563eb; padding:6px 10px; border-radius:0 6px 6px 0; color:#1e3a8a; }
+  .dec-i .rec b { color:#1d4ed8; }
+  .dec-i .who { margin-top:7px; font-size:11.5px; color:#9ca3af; }
+  .dec-i .who b { color:#d97706; font-weight:700; }
+
+  /* ---------- TABLE ---------- */
+  table { width:100%; border-collapse:collapse; background:#fff; border-radius:10px; overflow:hidden; border:1px solid #e3e7ee; }
+  th { background:#f8fafc; font-size:11.5px; color:#6b7280; font-weight:700; text-align:left; padding:10px 14px; border-bottom:1px solid #e3e7ee; letter-spacing:.3px; }
+  td { font-size:12.5px; padding:11px 14px; border-bottom:1px solid #f1f3f7; color:#4b5563; vertical-align:top; line-height:1.55; }
+  tr:last-child td { border-bottom:none; }
+  td b { color:#16181d; font-weight:600; }
+  .pill { display:inline-block; font-size:10.5px; font-weight:700; padding:2px 8px; border-radius:20px; white-space:nowrap; }
+  .pill.me { background:#dbeafe; color:#1d4ed8; }
+  .pill.boss { background:#fee2e2; color:#b91c1c; }
+  .pill.both { background:#fef3c7; color:#a16207; }
+  .pill.ext { background:#f1f5f9; color:#475569; }
+  .dot { display:inline-block; width:7px; height:7px; border-radius:50%; margin-right:6px; vertical-align:1px; }
+  .dot.r { background:#dc2626; } .dot.a { background:#d97706; } .dot.g { background:#16a34a; }
+
+  /* ---------- KANBAN ---------- */
+  .kb { display:grid; grid-template-columns:repeat(4,1fr); gap:13px; }
+  .col { background:#eef1f6; border-radius:13px; padding:13px; }
+  .col-h { display:flex; align-items:center; justify-content:space-between; margin-bottom:11px; padding:0 3px; }
+  .col-h .nm { font-size:12.5px; font-weight:700; display:flex; align-items:center; gap:7px; }
+  .col-h .cnt { font-size:11px; font-weight:700; background:#fff; color:#6b7280; border-radius:20px; padding:1px 9px; border:1px solid #dfe3ea; }
+  .col.c1 { background:#f0fdf4; } .col.c1 .col-h .nm { color:#15803d; }
+  .col.c2 { background:#eff6ff; } .col.c2 .col-h .nm { color:#1d4ed8; }
+  .col.c3 { background:#fefce8; } .col.c3 .col-h .nm { color:#a16207; }
+  .col.c4 { background:#fef2f2; } .col.c4 .col-h .nm { color:#b91c1c; }
+  .col-h .mk { width:7px; height:7px; border-radius:50%; }
+  .c1 .mk { background:#16a34a; } .c2 .mk { background:#2563eb; }
+  .c3 .mk { background:#d97706; } .c4 .mk { background:#dc2626; }
+
+  .card { background:#fff; border:1px solid #e3e7ee; border-radius:10px; padding:12px 13px; margin-bottom:10px; box-shadow:0 1px 2px rgba(16,24,40,.04); }
+  .card:last-child { margin-bottom:0; }
+  .card .ct { font-size:13px; font-weight:700; margin-bottom:8px; line-height:1.45; }
+  .row { display:flex; gap:8px; font-size:11.5px; margin-bottom:5px; align-items:flex-start; }
+  .row:last-child { margin-bottom:0; }
+  .row .k { flex:0 0 50px; color:#9ca3af; font-size:10.5px; font-weight:600; padding-top:1.5px; letter-spacing:.2px; }
+  .row .v { flex:1; color:#4b5563; line-height:1.5; }
+  .row .v b { color:#16181d; font-weight:600; }
+  .row.own { background:#f8fafc; margin:7px -6px 6px; padding:5px 6px; border-radius:6px; }
+  .row.own .k { color:#64748b; }
+  .row.std .v { color:#0f766e; }
+  .tag { display:inline-block; font-size:10px; font-weight:700; padding:1.5px 7px; border-radius:5px; margin-right:5px; vertical-align:1px; }
+  .tag.g { background:#dcfce7; color:#15803d; }
+  .tag.b { background:#dbeafe; color:#1d4ed8; }
+  .tag.a { background:#fef3c7; color:#a16207; }
+  .tag.r { background:#fee2e2; color:#b91c1c; }
+  .tag.n { background:#f1f3f7; color:#6b7280; }
+
+  /* ---------- 倒计时卡 ---------- */
+  .kpi.cd{grid-column:span 2;}
+  .kpi.cd .n{color:#b91c1c;}
+  .cd-sub{margin-top:8px;padding-top:8px;border-top:1px dashed #e3e7eb;font-size:12px;color:#6b7280;line-height:1.9;}
+  .cd-inp{font-family:inherit;font-size:12px;border:1px solid #cbd5e1;border-radius:5px;padding:2px 6px;color:#16181d;background:#fff;}
+  .cd-name{display:inline-block;min-width:120px;border-bottom:1px dashed #cbd5e1;color:#16181d;}
+  /* ---------- 保存状态提示 ---------- */
+  #ed-bar button.dirty{box-shadow:0 0 0 2px #fca5a5;}
+  #ed-toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:10000;
+    background:#1e293b;color:#fff;font-size:12.5px;padding:9px 17px;border-radius:9px;
+    opacity:0;transition:opacity .18s;pointer-events:none;max-width:80vw;}
+  #ed-toast.show{opacity:1;}
+  /* ---------- 可选分类格（风险等级 / 事项状态）---------- */
+  .lvdot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;vertical-align:1px;}
+  .lvdot.r{background:#dc2626;} .lvdot.y{background:#d97706;}
+  .lvdot.b{background:#2563eb;} .lvdot.g{background:#16a34a;}
+  .lvsel{font-family:inherit;font-size:12px;padding:2px 5px;border:1px solid #cbd5e1;
+    border-radius:6px;background:#fff;color:#1e293b;cursor:pointer;}
+  /* ---------- 卡片删除按钮（仅编辑态）---------- */
+  .card{position:relative;}
+  .card-x{position:absolute;top:6px;right:6px;width:19px;height:19px;border-radius:5px;
+    border:1px solid #fecaca;background:#fff;color:#b91c1c;font-size:12px;font-weight:700;
+    line-height:1;cursor:pointer;display:none;padding:0;}
+  body.editing .card-x{display:block;}
+  body.editing .card{padding-right:30px;}
+  /* ---------- TIMELINE ---------- */
+  .tl-line { position:relative; display:flex; justify-content:space-between; gap:8px; }
+  .tl-line::before { content:''; position:absolute; left:0; right:0; top:9px; height:2px; background:#e5e7eb; z-index:0; }
+  .tl-node { position:relative; z-index:1; flex:1; min-width:0; text-align:center; }
+  .tl-dot { width:19px; height:19px; border-radius:50%; margin:0 auto 9px; border:3px solid #fff; box-shadow:0 0 0 1.5px #d1d5db; }
+  .tl-node.done .tl-dot { background:#16a34a; box-shadow:0 0 0 1.5px #16a34a; }
+  .tl-node.now  .tl-dot { background:#2563eb; box-shadow:0 0 0 1.5px #2563eb; }
+  .tl-node.next .tl-dot { background:#d97706; box-shadow:0 0 0 1.5px #d97706; }
+  .tl-node.far  .tl-dot { background:#9ca3af; box-shadow:0 0 0 1.5px #9ca3af; }
+  .tl-node.hard .tl-dot { background:#dc2626; box-shadow:0 0 0 1.5px #dc2626; }
+  .tl-date { font-size:11.5px; font-weight:700; color:#374151; }
+  .tl-node.now .tl-date { color:#1d4ed8; }
+  .tl-node.hard .tl-date { color:#b91c1c; }
+  .tl-txt { font-size:11px; color:#6b7280; margin-top:2px; padding:0 4px; }
+  .tl-node.hard .tl-txt { color:#b91c1c; font-weight:600; }
+
+  .foot { margin-top:20px; text-align:center; font-size:11.5px; color:#9ca3af; }
+  .foot a { color:#6b7280; text-decoration:none; border-bottom:1px dashed #cbd5e1; }
+  .foot a:hover { color:#2563eb; border-bottom-color:#2563eb; }
+
+  /* ---------- 内置编辑器（仅浏览器中显示，打印／分享预览自动隐藏） ---------- */
+  #ed-bar{position:fixed;top:66px;right:20px;z-index:9999;display:flex;gap:6px;align-items:center;
+    background:#1e293b;padding:7px 9px;border-radius:11px;box-shadow:0 8px 26px rgba(15,23,42,.28);}
+  #ed-bar button{cursor:pointer;background:#fff;border:1px solid #cbd5e1;border-radius:7px;padding:6px 11px;
+    font-size:12px;font-weight:600;color:#1e293b;cursor:pointer;font-family:inherit;line-height:1.4;}
+  #ed-bar button:hover{background:#eff6ff;border-color:#2563eb;color:#1d4ed8;}
+  #ed-bar button.on{background:#2563eb;border-color:#2563eb;color:#fff;}
+  #ed-bar button.ok{background:#16a34a;border-color:#16a34a;color:#fff;}
+  #ed-bar .sp{width:1px;height:22px;background:#475569;margin:0 2px;}
+  #ed-note{position:fixed;top:60px;right:14px;z-index:9999;max-width:330px;display:none;
+    background:#fffbeb;border:1px solid #fcd34d;border-radius:9px;padding:9px 13px;
+    font-size:11.5px;color:#78350f;line-height:1.65;box-shadow:0 6px 18px rgba(15,23,42,.16);}
+  body.editing [contenteditable="true"]{outline:1px dashed #cbd5e1;outline-offset:2px;border-radius:4px;}
+  body.editing [contenteditable="true"]:hover{outline-color:#2563eb;background:#f8fafc;}
+  body.editing [contenteditable="true"]:focus{outline:2px solid #2563eb;background:#fff;}
+  @media print{ #ed-bar,#ed-note,#ed-toast,.card-x{display:none !important;} }
+  @media (max-width:1100px) { .kb { grid-template-columns:repeat(2,1fr); } }
+  @media (max-width:640px) {
+    body { padding:16px 12px 40px; }
+    .kb { grid-template-columns:1fr; }
+    .head { flex-direction:column; }
+    .tl-line { flex-direction:column; gap:14px; }
+    .tl-line::before { display:none; }
+    .tl-node { display:flex; text-align:left; gap:11px; align-items:flex-start; }
+    .tl-dot { margin:4px 0 0; flex:0 0 19px; }
+  }
+
+  @page { size: A4 landscape; margin: 6mm; }
+  @media print {
+    body { background:#fff; padding:0; font-size:9px; line-height:1.42; }
+    .wrap { max-width:none; }
+    .col, .card, .kpi, .head, .layer, .dec-i, table { box-shadow:none; }
+    .layer { margin-bottom:6px; border-radius:8px; break-inside:auto; }
+    .layer-h { padding:6px 12px; }
+    .layer-h .who { font-size:11px; }
+    .layer-h .note { font-size:8.5px; }
+    .lv { font-size:8.5px; padding:1px 6px; }
+    .layer-b { padding:9px 12px; }
+    .sub-h { margin-bottom:5px; }
+    .sub-h h3 { font-size:11px; }
+    .sub-h.sec { margin-top:11px; padding-top:9px; }
+    .head { padding:9px 12px; margin-bottom:6px; border-radius:8px; }
+    .head-l h1 { font-size:15px; }
+    .head-l .meta { font-size:9px; gap:10px; margin-top:3px; }
+    .guide { display:none; }
+    .status { margin-bottom:7px; gap:8px; }
+    .badge { font-size:10.5px; padding:4px 10px; }
+    .status .thr { font-size:9px; }
+    .kpis { gap:6px; margin-bottom:7px; }
+    .kpi { padding:7px 9px; }
+    .kpi .n { font-size:17px; }
+    .kpi .l { font-size:9px; }
+    .onething { padding:7px 11px; }
+    .onething .t { font-size:9px; }
+    .onething .d { font-size:10px; margin-top:2px; }
+    .onething .why { font-size:9px; margin-top:3px; }
+    .dec-grid { grid-template-columns:repeat(2,1fr); }
+    .dec-i { padding:8px 12px; }
+    .dec-i .no { width:17px; height:17px; font-size:9px; }
+    .dec-i .t { font-size:11px; }
+    .dec-i .opt { font-size:9.5px; margin-bottom:4px; }
+    .dec-i .rec { font-size:9.5px; padding:4px 8px; }
+    .dec-i .who { font-size:9px; margin-top:4px; }
+    .kb { grid-template-columns:repeat(4,1fr); gap:8px; }
+    .col { padding:8px; border-radius:8px; }
+    .col-h { margin-bottom:6px; }
+    .col-h .nm { font-size:10.5px; }
+    .card { padding:7px 9px; margin-bottom:6px; }
+    .card .ct { font-size:10.5px; margin-bottom:5px; }
+    .row { font-size:9px; margin-bottom:3px; }
+    .row .k { flex:0 0 32px; font-size:8.5px; }
+    .row.own { margin:5px -4px 4px; padding:3px 4px; }
+    .tag { font-size:8px; padding:1px 5px; }
+    th { padding:6px 10px; font-size:9px; }
+    td { padding:6px 10px; font-size:9.5px; }
+    .pill { font-size:8.5px; padding:1.5px 6px; }
+    .tl-dot { width:13px; height:13px; margin-bottom:5px; }
+    .tl-line::before { top:6px; }
+    .tl-date { font-size:9.5px; }
+    .tl-txt { font-size:8.5px; }
+    .foot { margin-top:7px; font-size:8.5px; }
+    .pg-break { page-break-after: always; }
+    tr { page-break-inside:avoid; }
+  }
+
+  /* ---------- 增强：标签固定 / 卡片拖拽 / 时间节点配色 ---------- */
+  .lvdot.n{background:#9ca3af;}
+  .grip{display:inline-block;cursor:grab;color:#cbd5e1;font-size:15px;line-height:1;margin-right:6px;user-select:none;-webkit-user-select:none;vertical-align:1px;}
+  .grip:active{cursor:grabbing;}
+  .card{border-left:3px solid #e3e7ee;}
+  .col.c1 .card{border-left-color:#16a34a;}
+  .col.c2 .card{border-left-color:#2563eb;}
+  .col.c3 .card{border-left-color:#d97706;}
+  .col.c4 .card{border-left-color:#dc2626;}
+  .kb-ph{height:14px;background:#cbd5e1;border:1px dashed #94a3b8;border-radius:8px;margin-bottom:10px;opacity:.75;}
+  .card.dragging{opacity:.45;}
+  .tl-dot[data-c="g"]{background:#16a34a;box-shadow:0 0 0 1.5px #16a34a;}
+  .tl-dot[data-c="b"]{background:#2563eb;box-shadow:0 0 0 1.5px #2563eb;}
+  .tl-dot[data-c="y"]{background:#d97706;box-shadow:0 0 0 1.5px #d97706;}
+  .tl-dot[data-c="r"]{background:#dc2626;box-shadow:0 0 0 1.5px #dc2626;}
+  .tl-dot[data-c="n"]{background:#9ca3af;box-shadow:0 0 0 1.5px #9ca3af;}
+  .tl-dot[data-c="p"]{background:#7c3aed;box-shadow:0 0 0 1.5px #7c3aed;}
+  .tl-dot{cursor:pointer;}
+  #tl-pal{position:fixed;z-index:10001;display:none;background:#fff;border:1px solid #cbd5e1;border-radius:12px;padding:8px;gap:7px;box-shadow:0 10px 30px rgba(15,23,42,.28);}
+  #tl-pal.show{display:flex;}
+  #tl-pal .sw{width:24px;height:24px;border-radius:50%;cursor:pointer;border:2px solid #fff;box-shadow:0 0 0 1px #e5e7eb;transition:transform .1s;}
+  #tl-pal .sw:hover{transform:scale(1.14);}
+  @media print{ .grip{display:none !important;} #tl-pal{display:none !important;} }
+
+  /* ---------- 卡片默认折叠（点击展开） ---------- */
+  .card:not(.open) > .row:not(.keep){display:none;}
+  body:not(.editing) .card{cursor:pointer;}
+  .card:not(.open) .ct::after{content:'展开';background:#2563eb;color:#fff;font-size:11px;font-weight:700;padding:2px 12px;border-radius:999px;margin-left:8px;white-space:nowrap;}
+  .card.open .ct::after{content:'收起';background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe;font-size:11px;font-weight:700;padding:2px 12px;border-radius:999px;margin-left:8px;white-space:nowrap;}
+  @media print{ .card .ct::after{content:'' !important;} }
+
+  /* ---------- 卡片统一格式 / 主题色 / 字段强调 ---------- */
+  .row{padding:0;}
+  .row .k{flex:0 0 54px;white-space:nowrap;}
+  .row .v{min-height:18px;}
+  .row.src .v{color:#64748b;}
+  .row.dsc .v{color:#4b5563;}
+  .row.evi .v{color:#64748b;font-size:11px;}
+  .row.nod .v{color:#4b5563;}
+  .row.own{background:#f1f5f9;margin:6px -4px 6px;padding:5px 8px;border-radius:7px;}
+  .row.own .k{color:#475569;}
+  .row.need{margin:5px -4px;padding:5px 8px;border-radius:7px;background:#eff6ff;}
+  .row.need .k{color:#1d4ed8;} .row.need .v{color:#1d4ed8;font-weight:600;}
+  .row.blk{margin:5px -4px;padding:5px 8px;border-radius:7px;background:#fef2f2;}
+  .row.blk .k{color:#b91c1c;} .row.blk .v{color:#b91c1c;}
+  .row.imp{margin:5px -4px;padding:5px 8px;border-radius:7px;background:#fffbeb;}
+  .row.imp .k{color:#b45309;} .row.imp .v{color:#b45309;}
+  .row.std{margin:6px -4px 5px;padding:6px 8px;border-radius:7px;background:#f0fdf4;border:1px solid #bbf7d0;}
+  .row.std .k{color:#15803d;} .row.std .v{color:#15803d;font-weight:600;}
+  /* 卡片主题色随四状态列变动 */
+  .col.c1 .card{background:#f8fdfa;border-color:#dcfce7;}
+  .col.c2 .card{background:#f8fbff;border-color:#dbeafe;}
+  .col.c3 .card{background:#fffdf6;border-color:#fef3c7;}
+  .col.c4 .card{background:#fffafa;border-color:#fee2e2;}
+  .col.c1 .card .ct{color:#166534;}
+  .col.c2 .card .ct{color:#1e40af;}
+  .col.c3 .card .ct{color:#92400e;}
+  .col.c4 .card .ct{color:#991b1b;}
+  /* 进展看板顶栏：全部展开 / 全部折叠 */
+  #kb-tools{margin-left:auto;display:flex;gap:5px;flex:0 0 auto;}
+  #kb-tools button{font-family:inherit;font-size:11px;font-weight:600;padding:3px 9px;
+    border-radius:6px;border:1px solid #cbd5e1;background:#fff;color:#475569;cursor:pointer;line-height:1.5;}
+  #kb-tools button:hover{border-color:#2563eb;color:#1d4ed8;background:#eff6ff;}
+  /* 提示框改版 */
+  #ed-note{display:none;padding:10px 12px;max-width:300px;}
+  #ed-note.show{display:block;}
+  #ed-note .nx{float:right;cursor:pointer;color:#b45309;font-weight:700;font-size:13px;line-height:1;margin-left:8px;}
+  #ed-note .nx:hover{color:#b91c1c;}
+  #ed-note .nl{font-size:11px;line-height:1.75;color:#78350f;}
+  #ed-note .nl b{color:#92400e;}
+  /* 导出图片时隐藏编辑元素 */
+  body.exporting #ed-bar, body.exporting #ed-note, body.exporting #kb-tools,
+  body.exporting .grip, body.exporting .card-x{display:none !important;}
+  body.exporting .ct::after{content:'' !important;}
+
+  /* ---------- 当月日历 ---------- */
+  .cal-hd{font-size:14px;font-weight:700;color:#16181d;}
+  .cal-sep{color:#cbd5e1;margin:0 8px;font-weight:400;}
+  #cal-loc{border-bottom:1px dashed #94a3b8;padding-bottom:1px;}
+  .lgw{color:#15803d;} .lgr{color:#1d4ed8;} .lgh{color:#c2410c;}
+  .cal{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;}
+  .cal .wd{font-size:11px;font-weight:700;color:#6b7280;text-align:center;padding:2px 0 4px;}
+  .cal .dy{border-radius:9px;border:1px solid #e3e7ee;background:#fff;text-align:center;padding:6px 2px 5px;min-height:48px;}
+  .cal .dy .d{font-size:13.5px;font-weight:700;line-height:1.25;display:block;}
+  .cal .dy .hn{font-size:9px;line-height:1.3;display:block;margin-top:2px;padding:0 2px;font-weight:600;}
+  .cal .dy.t-w{background:#f0fdf4;border-color:#bbf7d0;}
+  .cal .dy.t-w .d,.cal .dy.t-w .hn{color:#15803d;}
+  .cal .dy.t-r{background:#eff6ff;border-color:#bfdbfe;}
+  .cal .dy.t-r .d,.cal .dy.t-r .hn{color:#1d4ed8;}
+  .cal .dy.t-h{background:#fff7ed;border-color:#fdba74;}
+  .cal .dy.t-h .d,.cal .dy.t-h .hn{color:#c2410c;}
+  .cal .dy.today{box-shadow:0 0 0 2px #2563eb;}
+  .cal .dy.blank{background:transparent;border-color:transparent;}
+  body.editing .cal .dy:not(.blank){cursor:pointer;}
+  body.editing .cal .dy:not(.blank):hover{outline:2px dashed #2563eb;outline-offset:1px;}
+
+  /* ---------- 日历：折叠条 / 月份选择 / 小按钮 ---------- */
+  .mini-btn{font-family:inherit;font-size:11px;font-weight:600;padding:3px 9px;border-radius:6px;
+    border:1px solid #cbd5e1;background:#fff;color:#475569;cursor:pointer;line-height:1.5;}
+  .mini-btn:hover{border-color:#2563eb;color:#1d4ed8;background:#eff6ff;}
+  .cal-title-wrap{position:relative;display:inline-block;}
+  .cal-month{position:absolute;left:0;top:0;width:100%;height:100%;opacity:0;margin:0;padding:0;border:none;cursor:pointer;}
+  body:not(.editing) .cal-month{display:none;}
+  body.editing #cal-title{cursor:pointer;border-bottom:1px dashed #94a3b8;}
+  .cal-ty{margin-left:10px;}
+  .cal-ty .ty{font-size:11.5px;font-weight:700;padding:2px 11px;border-radius:20px;}
+  .cal-ty .ty.w{background:#dcfce7;color:#15803d;}
+  .cal-ty .ty.r{background:#dbeafe;color:#1d4ed8;}
+  .cal-ty .ty.h{background:#ffedd5;color:#c2410c;}
+  #cal-layer .layer-b{display:none;}
+  #cal-layer.cal-open .layer-b{display:block;}
+  #cal-grid{display:none;}
+  .cal-wrap.open #cal-grid{display:grid;}
+  #calToggle,#kb-tools #kbToggle{background:#2563eb;border-color:#2563eb;color:#fff;font-weight:700;}
+  #calToggle:hover,#kb-tools #kbToggle:hover{background:#1d4ed8;border-color:#1d4ed8;color:#fff;}
+  #ed-bar button:disabled{opacity:.45;cursor:not-allowed;}
+  body.exporting #cal-month{display:none !important;}
+
+  /* ---------- 节点选择 + 截止日期 + 富文本按钮 ---------- */
+  .kpis .kpi[data-sync]{cursor:pointer;transition:transform .12s,box-shadow .12s;}
+  .kpis .kpi[data-sync]:hover{transform:translateY(-2px);box-shadow:0 8px 18px rgba(37,99,235,.15);}
+  .lvdot.a{background:#ea580c;} .lvdot.p{background:#7c3aed;} .lvdot.o{background:#0d9488;}
+  .nd-badge{display:inline-flex;align-items:center;font-size:10.5px;font-weight:700;padding:2px 9px;border-radius:20px;white-space:nowrap;}
+  .nd-badge.g{background:#dcfce7;color:#15803d;}
+  .nd-badge.b{background:#dbeafe;color:#1d4ed8;}
+  .nd-badge.y{background:#fef3c7;color:#a16207;}
+  .nd-badge.a{background:#ffedd5;color:#c2410c;}
+  .nd-badge.n{background:#f1f3f7;color:#6b7280;}
+  .nd-badge.r{background:#fee2e2;color:#b91c1c;}
+  .nd-badge.p{background:#ede9fe;color:#6d28d9;}
+  .nd-badge.o{background:#ccfbf1;color:#0f766e;}
+  .nod-v{display:flex;align-items:center;gap:7px;flex-wrap:wrap;}
+  .nod-sep{color:#cbd5e1;font-weight:400;}
+  .nod-v .nd{color:#4b5563;font-weight:600;}
+  .nod-inp,.due-inp{font-family:inherit;font-size:12px;border:1px solid #cbd5e1;border-radius:5px;padding:1px 5px;background:#fff;color:#1e293b;}
+  #ed-note .fmt{margin-top:6px;padding-top:6px;border-top:1px dashed #fcd34d;display:flex;gap:5px;align-items:center;flex-wrap:wrap;}
+  #ed-note .fmt button{font-family:inherit;font-size:11px;font-weight:700;padding:2px 8px;border-radius:5px;border:1px solid #fcd34d;background:#fffbeb;color:#92400e;cursor:pointer;line-height:1.5;}
+  #ed-note .fmt button:hover{background:#fef3c7;}
+  #ed-note .fmt .fh{font-size:10px;color:#b45309;font-weight:400;}
+
+  /* ---------- 表格整行拖拽 ---------- */
+  th.drag-col{width:26px;padding:6px 2px !important;}
+  td.drag-col{padding:0 2px !important;text-align:center;vertical-align:middle;}
+  .tgrip{display:inline-block;cursor:grab;color:#cbd5e1;font-size:13px;line-height:1;user-select:none;-webkit-user-select:none;}
+  .tgrip:active{cursor:grabbing;}
+  tr.row-dragging{opacity:.4;}
+  .row-ph td{padding:0 !important;border:1px dashed #94a3b8;background:#f1f5f9;height:8px;}
+  @media print{ .drag-col{display:none !important;} .tgrip{display:none !important;} }
+
+  /* ---------- 工具条：收起为「菜单」方块，点击即展开 ---------- */
+  #ed-row{display:flex;gap:6px;align-items:center;}
+  #ed-bar.mini{padding:0;background:transparent;box-shadow:none;}
+  #ed-bar.mini #ed-row{display:none;}
+  #ed-bar #ed-mini{display:none;}
+  #ed-bar.mini #ed-mini{display:flex;}
+  #ed-bar #ed-mini{font-family:inherit;cursor:pointer;background:#1e293b;border:1px solid #334155;color:#fff;
+    border-radius:9px;height:30px;align-items:center;justify-content:center;
+    font-size:12.5px;font-weight:700;letter-spacing:2px;line-height:1;padding:0 10px;}
+  #ed-bar #ed-mini:hover{background:#334155;border-color:#475569;}
+  #ed-bar #ed-mini.dirty{box-shadow:0 0 0 2px #fca5a5;}
+  body:not(.editing) .grip, body:not(.editing) .tgrip{visibility:hidden;}
+</style>
+</head>
+<body style="position: relative;" class="">
+<div class="wrap">
+
+  <!-- ================= HEADER ================= -->
+  <div class="head">
+    <div class="head-l">
+      <h1>项目交付工作看板（示例模板）</h1>
+      <div class="meta">
+        <span>负责人 <b>本人（示例）</b></span>
+        <span>覆盖 <b>示例国家</b></span>
+        <span>数据截至 <b>示例</b></span>
+        <span>下次更新 <b>示例时间（如 对接方回复后）</b></span>
+      </div>
+    </div>
+    <div class="guide">
+      <div class="gt">三层阅读指引 · 按读者分层</div>
+      <div style=""><span class="lg">L0</span> 30秒速览</div>
+      <div><span class="lg">L1</span> 直属领导与协同方 —— 决策项 + 各协同方对照</div>
+      <div><span class="lg">L2</span> 执行清单 —— 本人动作、完成标准与风险台账</div>
+    </div>
+  </div>
+
+  <!-- ================= 当月日历 ================= -->
+  <div class="layer" id="cal-layer">
+    <div class="layer-h">
+      <span class="cal-hd"><span class="cal-title-wrap" id="cal-title-wrap"><span id="cal-title">示例日期</span><input type="month" id="cal-month" class="cal-month" value=""></span><span class="cal-sep">｜</span><span id="cal-loc">示例城市 · 示例国家</span><span class="cal-ty" id="cal-ty"><span class="ty w">工作日</span></span></span>
+      <span class="note"><b class="lgw">绿=工作日</b>　<b class="lgr">蓝=休息日</b>　<b class="lgh">橙=节假日</b>　编辑态点日期循环切换</span>
+      <button class="mini-btn" id="calToggle">展开</button>
+    </div>
+    <div class="layer-b">
+      <div class="cal-wrap" id="cal-wrap">
+        <div class="cal" id="cal-grid" data-ov="{}"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= L0 最高领导 ================= -->
+  <div class="layer l0 pg-break">
+    <div class="layer-h">
+      <span class="lv">L0</span>
+      <span class="who" style="">30 秒速览</span>
+      <span class="note">结论与本页核心事项<br></span>
+    </div>
+    <div class="layer-b">
+
+      <div class="status">
+        <span class="badge y">黄灯 · 可控，但有前置阻塞</span>
+        <span class="thr">转为<span style="color:#b91c1c;font-weight:700">红灯</span>的条件：<b>示例 前考察资源（示例）未获批</b></span>
+      </div>
+
+      <div class="kpis">
+        <div class="kpi cd" data-deadline="示例">
+          <div class="n">示例</div>
+          <div class="cd-sub">
+            <div>当前关键节点　<span class="cd-name" id="cd-next-name">示例关键节点</span></div>
+            <div style="margin-top:5px;">日期　<input type="date" class="cd-inp" id="cd-next-date" value="示例"></div>
+          </div>
+        </div>
+        <div class="kpi g" data-sync="c1" data-kjump="1" title="点击跳转到进展看板"><div class="n">2</div><div class="l">已办结 / 已移交</div></div>
+        <div class="kpi b" data-sync="c2" data-kjump="1" title="点击跳转到进展看板"><div class="n">3</div><div class="l">进行中</div></div>
+        <div class="kpi a" data-sync="c3" data-kjump="1" title="点击跳转到进展看板"><div class="n">3</div><div class="l">受阻 / 待启动</div></div>
+        <div class="kpi r" data-sync="c4" data-kjump="1" title="点击跳转到进展看板"><div class="n">4</div><div class="l">待决策</div></div>
+      </div>
+
+      <div class="onething">
+        <div class="t" style="">最核心事项</div>
+        <div class="d" style="">请确认是否应在 <b>示例日期（如 示例）前批准考察资源（示例）</b>（租车自行出行（示例）赴目标现场（示例）周边实地勘察（示例））。这是唯一能同时撬动<b>驻地（示例）、往来（示例）、补贴（示例）口径</b>三项决策的杠杆点——成本低、可随时叫停。</div>
+        <div class="why" style="">理由：目标现场（示例）不在出行工具服务区，无车无法开展驻地资源（示例）勘察；驻地资源（示例）不定 → 往来（示例）方案无从选型 → 补贴（示例）执行口径无法确认。三者互相咬死，只有先批资源（示例）才能解开。</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ================= L1 直属领导与协同方 ================= -->
+  <div class="layer l1">
+    <div class="layer-h">
+      <span class="lv">L1</span>
+      <span class="who" style="">需上级领导决策或跨部门协同事项
+</span>
+      <span class="note">上半部 · 直属领导<br>下半部 · 部门协同</span>
+    </div>
+    <div class="layer-b">
+
+      <div class="sub-h">
+        <div class="bar"></div><h3>需领导拍板事项</h3>
+        <span class="hint" style="">决策人：直属领导（示例）</span>
+      </div>
+      <table>
+        <thead><tr><th class="drag-col" style="width:3%"></th><th style="width:16%">事项</th><th style="width:34%">选项与代价</th><th style="width:26%">我的建议</th><th style="width:12%">建议时点</th><th>状态</th></tr></thead>
+        <tbody data-trb="1">
+          <tr data-rrow="1">
+            <td class="drag-col"><span class="tgrip" title="拖动整行可调整顺序">⋮⋮</span></td>
+            <td><b>考察资源（示例）审批（优先）</b></td>
+            <td>批准租车自行出行（示例）赴目标现场（示例）周边实地勘察（示例）。<br>成本：待供应商报价（单次，可随时叫停）</td>
+            <td><b>建议批准。</b>这是唯一低成本、可撤销、且能同时解锁驻地资源（示例）与往来（示例）的动作</td>
+            <td><b>示例 前</b></td>
+            <td class="opt st" data-v="r"><span class="lvdot r"></span><b>待批</b></td>
+          </tr>
+          <tr data-rrow="1">
+            <td class="drag-col"><span class="tgrip" title="拖动整行可调整顺序">⋮⋮</span></td>
+            <td><b>往来长期方案选型</b></td>
+            <td>A 步行／班车<br>B 员工自行出行（示例），自行出行（示例）需资质（示例） 示例金额 元、需指定语言（示例）作答理论考试、约 示例周期（如 示例 个月）拿证</td>
+            <td>待中介回复与实地勘察后出对比报告，再报选型</td>
+            <td><b>示例 前</b></td>
+            <td class="opt st" data-v="y"><span class="lvdot y"></span><b>待决策</b></td>
+          </tr>
+          <tr data-rrow="1">
+            <td class="drag-col"><span class="tgrip" title="拖动整行可调整顺序">⋮⋮</span></td>
+            <td><b>补贴（示例）执行口径确认</b></td>
+            <td>基准 示例金额 元／人／月（内部核算基准，非对外承诺）<br>低于 → 公司统租（示例），差价即项目节省；高于 → 发补贴（示例）由员工自租</td>
+            <td>确认按「低于基准则公司统租（示例）」执行。<br>示例：示例（如 示例 房）整包（示例） 示例金额 元 ≈ 示例金额 元／人，每人省 示例金额 元</td>
+            <td><b>示例 前</b></td>
+            <td class="opt st" data-v="b"><span class="lvdot b"></span><b>待确认</b></td>
+          </tr>
+          <tr data-rrow="1">
+            <td class="drag-col"><span class="tgrip" title="拖动整行可调整顺序">⋮⋮</span></td>
+            <td><b>资质考取预算</b></td>
+            <td>仅当选「自行出行（示例）往来（示例）」时才需要。<br>示例金额 元／人，约 示例周期（如 示例 个月）周期</td>
+            <td style="">随往来（示例）选型一并决定；若选自行出行（示例），也需至少示例个月后才可考取资质（示例）；在此之前可用资质文件（示例）临时驾车不超过示例天。</td>
+            <td>随选型</td>
+            <td class="opt st" data-v="g"><span class="lvdot g"></span><b>条件触发</b></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="sub-h sec">
+        <div class="bar"></div><h3>协同方对照表</h3>
+        <span class="hint">请各位同事关注 —— 「协同方」＋「时点」＋「卡住的影响」</span>
+      </div>
+      <table>
+        <thead><tr><th class="drag-col" style="width:3%"></th><th style="width:14%">协同方</th><th style="width:22%">与哪项有关</th><th style="width:26%">需要您做什么</th><th style="width:11%">时点</th><th>若卡住的影响</th></tr></thead>
+        <tbody data-trb="1">
+          <tr data-rrow="1">
+            <td class="drag-col"><span class="tgrip" title="拖动整行可调整顺序">⋮⋮</span></td>
+            <td><b>直属领导（示例） · 决策</b></td>
+            <td>考察资源（示例） · 往来（示例）选型 · 补贴（示例）口径 · 资质（示例）预算</td>
+            <td><b>拍板上表 4 项</b>，其中用车审批最急</td>
+            <td>示例时段</td>
+            <td>全部下游动作无法启动，示例 抵达（示例）无驻地（示例）与往来（示例）保障</td>
+          </tr>
+          <tr data-rrow="1">
+            <td class="drag-col"><span class="tgrip" title="拖动整行可调整顺序">⋮⋮</span></td>
+            <td><b>商务侧</b></td>
+            <td>方案合同签署</td>
+            <td style="">推进与中介方案服务的合同签署（<b>商务侧跟进</b>）</td>
+            <td style="">示例</td>
+            <td style="">影响首批抵达（示例）人员行程计划</td>
+          </tr>
+          <tr data-rrow="1">
+            <td class="drag-col"><span class="tgrip" title="拖动整行可调整顺序">⋮⋮</span></td>
+            <td><b>HR · 招聘</b></td>
+            <td>首批人员名单与到岗时间</td>
+            <td style="">目前示例人数（如 示例 人）于示例日期抵达（示例）示例国家；<br>若有变动请同步到<b>本人（示例）</b></td>
+            <td style="">示例</td>
+            <td style="">影响后续驻地资源（示例）、往来（示例）、接站（示例）计划</td>
+          </tr>
+          <tr data-rrow="1">
+            <td class="drag-col"><span class="tgrip" title="拖动整行可调整顺序">⋮⋮</span></td>
+            <td><b>属地对接</b></td>
+            <td>离岗（示例）前对接、落地接站（示例）</td>
+            <td>由<b>本人（示例）</b>负责跟进</td>
+            <td>示例 前</td>
+            <td>人员出发前未完成对接，直接影响属地安全责任</td>
+          </tr>
+          <tr data-rrow="1">
+            <td class="drag-col"><span class="tgrip" title="拖动整行可调整顺序">⋮⋮</span></td>
+            <td><b>中介（示例）</b></td>
+            <td>驻地资源（示例）清单 · 集体出行（示例）报价</td>
+            <td>回复可看驻地资源（示例）（<b>重点：示例距离（如 km） 内步行可达</b>）与集体出行（示例）可行性报价</td>
+            <td>示例</td>
+            <td>驻地资源（示例）与往来（示例）方案无法成型；已同步对接第二家作为备份</td>
+          </tr><tr data-rrow="1">
+            <td class="drag-col"><span class="tgrip" title="拖动整行可调整顺序">⋮⋮</span></td>
+            <td><b>上级领导（示例）</b></td>
+            <td>目标现场（示例）地址确认核对</td>
+            <td>新增一人到岗目标现场（示例）地址核实为示例城市C，需要确认</td>
+            <td>示例</td>
+            <td>新增一人往来（示例）、驻地（示例）问题安排受阻</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="sub-h sec">
+        <div class="bar"></div><h3>进展看板</h3>
+        <span class="hint">每张卡片标注执行人与完成标准</span>
+      </div>
+      <div class="kb">
+
+        <div class="col c1" data-dndc="1">
+          <div class="col-h"><div class="nm"><span class="mk"></span>已办结 / 已移交</div><div class="cnt">2</div></div>
+
+          <div class="card open" data-dnd="1" data-tg="1">
+            <button class="card-x" title="删除这张卡">✕</button>
+            <div class="ct"><span class="grip" title="拖动此卡可跨列移动或调整顺序">⋮⋮</span>合规方案核实与交付</div>
+            <div class="row own"><div class="k">执行人</div><div class="v"><span class="pill me">本人（示例）</span></div></div>
+            <div class="row src"><div class="k">来源</div><div class="v">上级领导（示例）</div></div>
+            <div class="row dsc"><div class="k">说明</div><div class="v">为属地人员解决方案合规问题</div></div>
+            <div class="row need keep"><div class="k">需求</div><div class="v">需要提供方案、合同对接、发票税费</div></div>
+            <div class="row blk"><div class="k">卡点</div><div class="v">已提交所需信息给上级领导（示例），由商务推进后续合同签署工作</div></div>
+            <div class="row imp"><div class="k">影响</div><div class="v">信息未核实将影响方案通道选择与成本测算</div></div>
+            <div class="row evi"><div class="k">依据</div><div class="v">已核实并与中介核对，示例 递交</div></div>
+            <div class="row std"><div class="k">完成标准</div><div class="v">已办结：后续合同签署由商务侧推进，本人（示例）同步配合</div></div>
+            <div class="row nod"><div class="k">节点</div><div class="v"><div class="v nod-v" data-st="g" data-d="示例"><span class="nd-badge g"><span class="lvdot g"></span>已完成</span><span class="nod-sep">·</span><span class="nd">示例</span></div></div></div>
+          </div><div class="card open" data-dnd="1" data-tg="1">
+            <button class="card-x" title="删除这张卡">✕</button>
+            <div class="ct"><span class="grip" title="拖动此卡可跨列移动或调整顺序">⋮⋮</span>通知停办材料 + 收证件照片</div>
+            <div class="row own"><div class="k">执行人</div><div class="v"><span class="pill me">本人（示例）</span></div></div>
+            <div class="row src"><div class="k">来源</div><div class="v">上级领导（示例） 示例</div></div>
+            <div class="row dsc"><div class="k">说明</div><div class="v">改用现中介后学历问题明年再处理，需通知候选人停止公证</div></div>
+            <div class="row need keep"><div class="k">需求</div><div class="v">即时通讯群（示例）通知；同时要求 示例人数（如 示例 人）提供证件（示例）清晰照片</div></div>
+            <div class="row blk"><div class="k">卡点</div><div class="v">无</div></div>
+            <div class="row imp"><div class="k">影响</div><div class="v">不再需要材料公证（示例），及时递交证件（示例）</div></div>
+            <div class="row evi"><div class="k">依据</div><div class="v">方案已交由中介推进</div></div>
+            <div class="row std"><div class="k">完成标准</div><div class="v">示例人数（如 示例 人）均确认收到停止公证 + 证件（示例）照片收齐</div></div>
+            <div class="row nod"><div class="k">节点</div><div class="v"><div class="v nod-v" data-st="b" data-d="示例"><span class="nd-badge b"><span class="lvdot b"></span>进行中</span><span class="nod-sep">·</span><span class="nd">示例</span></div></div></div>
+          </div>
+
+          
+
+        </div>
+
+        <div class="col c2" data-dndc="1">
+          <div class="col-h"><div class="nm"><span class="mk"></span>进行中</div><div class="cnt">3</div></div>
+
+          <div class="card open" data-dnd="1" data-tg="1">
+            <button class="card-x" title="删除这张卡">✕</button>
+            <div class="ct"><span class="grip" title="拖动此卡可跨列移动或调整顺序">⋮⋮</span>驻地资源调研</div>
+            <div class="row own"><div class="k">执行人</div><div class="v"><span class="pill me">本人（示例）</span></div></div>
+            <div class="row src"><div class="k">来源</div><div class="v">上级领导（示例）</div></div>
+            <div class="row dsc"><div class="k">说明</div><div class="v">已对接示例 位中介，已收集 示例 处驻地资源（示例）：<br>1. 示例片区可租驻地资源（示例），距目标现场（示例） 示例距离（如 示例 km），人均约 示例金额 元<br>2. 已租可用公寓（持续至示例时间（如 示例）往来（示例） 示例距离（如 示例 km），剩 示例（如 示例 规格）</div></div>
+            <div class="row need keep"><div class="k">需求</div><div class="v">中介回复 + 示例距离（如 km） 内步行可达驻地资源（示例）</div></div>
+            <div class="row blk"><div class="k">卡点</div><div class="v">中介暂无 示例距离（如 km） 内步行可达驻地资源（示例）；当地无 租房渠道（示例），多为房主门口挂牌</div></div>
+            <div class="row imp"><div class="k">影响</div><div class="v">驻地资源（示例）不定 → 往来（示例）方案无从选型 → 补贴（示例）执行口径无法确认</div></div>
+            <div class="row evi"><div class="k">依据</div><div class="v">中介反馈 + 已收集 示例 处驻地资源（示例）实测信息</div></div>
+            <div class="row std"><div class="k">完成标准</div><div class="v">产出含租金 / 距离 / 往来（示例）方式 / 可入住时间的驻地资源（示例）对比清单</div></div>
+            <div class="row nod"><div class="k">节点</div><div class="v"><div class="v nod-v" data-st="y" data-d="示例"><span class="nd-badge y"><span class="lvdot y"></span>等回复</span><span class="nod-sep">·</span><span class="nd">示例</span></div></div></div>
+          </div>
+
+          <div class="card open" data-dnd="1" data-tg="1">
+            <button class="card-x" title="删除这张卡">✕</button>
+            <div class="ct"><span class="grip" title="拖动此卡可跨列移动或调整顺序">⋮⋮</span>人员往来方案</div>
+            <div class="row own"><div class="k">执行人</div><div class="v"><span class="pill me">本人（示例）</span></div></div>
+            <div class="row src"><div class="k">来源</div><div class="v">上级领导（示例）</div></div>
+            <div class="row dsc"><div class="k">说明</div><div class="v">已向中介提交集体出行（示例）需求</div></div>
+            <div class="row need keep"><div class="k">需求</div><div class="v">集体出行（示例）报价与可行性回复</div></div>
+            <div class="row blk"><div class="k">卡点</div><div class="v">根本约束：目标现场（示例）不在 出行工具（示例） 服务区，驻地资源（示例）再近也打不到车</div></div>
+            <div class="row imp"><div class="k">影响</div><div class="v">决定驻地资源（示例）筛选条件与往来（示例）成本结构</div></div>
+            <div class="row evi"><div class="k">依据</div><div class="v">出行工具（示例） 实测：示例距离（如 示例 km）前往目标现场（示例），现价 示例金额（如 单程 示例 元）<br>返程上车点目标现场（示例），不在运营区</div></div>
+            <div class="row std"><div class="k">完成标准</div><div class="v">产出三方案对比报告（成本 / 合规风险 / 可承载人数）并附推荐项</div></div>
+            <div class="row nod"><div class="k">节点</div><div class="v"><div class="v nod-v" data-st="y" data-d="示例"><span class="nd-badge y"><span class="lvdot y"></span>等回复</span><span class="nod-sep">·</span><span class="nd">示例</span></div></div></div>
+          </div><div class="card open" data-dnd="1" data-tg="1">
+            <button class="card-x" title="删除这张卡">✕</button>
+            <div class="ct"><span class="grip" title="拖动此卡可跨列移动或调整顺序">⋮⋮</span>建沟通群（示例）对接签署合同</div>
+            <div class="row own"><div class="k">执行人</div><div class="v"><span class="pill me">本人（示例）</span></div></div>
+            <div class="row src"><div class="k">来源</div><div class="v">上级领导（示例） 示例</div></div>
+            <div class="row dsc"><div class="k">说明</div><div class="v">拉中介示例国家公司对接人 + 公司商务进即时通讯群（示例），沟通后续签署</div></div>
+            <div class="row need keep"><div class="k">需求</div><div class="v">中介侧即时通讯联系人（示例）；本公司商务侧对接人</div></div>
+            <div class="row blk"><div class="k">卡点</div><div class="v">示例节点前关键资源未到位，示例处理</div></div>
+            <div class="row imp"><div class="k">影响</div><div class="v">拉群推迟，方案合作推迟</div></div>
+            <div class="row evi"><div class="k">依据</div><div class="v">示例 已递交方案、确认实体、发票税率</div></div>
+            <div class="row std"><div class="k">完成标准</div><div class="v">即时通讯群（示例）建成，双方对接人入群并开场</div></div>
+            <div class="row nod"><div class="k">节点</div><div class="v"><div class="v nod-v" data-st="b" data-d="示例"><span class="nd-badge b"><span class="lvdot b"></span>进行中</span><span class="nod-sep">·</span><span class="nd">示例</span></div></div></div>
+          </div>
+
+        </div>
+
+        <div class="col c3" data-dndc="1">
+          <div class="col-h"><div class="nm"><span class="mk"></span>受阻 / 待启动</div><div class="cnt">3</div></div>
+
+          <div class="card open" data-dnd="1" data-tg="1">
+            <button class="card-x" title="删除这张卡">✕</button>
+            <div class="ct"><span class="grip" title="拖动此卡可跨列移动或调整顺序">⋮⋮</span>目标现场周边资源实地排查</div>
+            <div class="row own"><div class="k">执行人</div><div class="v"><span class="pill me">本人（示例）</span></div></div>
+            <div class="row src"><div class="k">来源</div><div class="v">本人（示例）</div></div>
+            <div class="row dsc"><div class="k">说明</div><div class="v">需赴目标现场（示例）周边实地采集挂牌驻地资源（示例）信息</div></div>
+            <div class="row need keep"><div class="k">需求</div><div class="v">租车（自行出行（示例））作为考察工具</div></div>
+            <div class="row blk"><div class="k">卡点</div><div class="v">缺交通工具：无法前往目标现场（示例）周边</div></div>
+            <div class="row imp"><div class="k">影响</div><div class="v">驻地资源（示例）信息无法扩充，往来（示例）选型缺数据支撑</div></div>
+            <div class="row evi"><div class="k">依据</div><div class="v">本人持公证资质（示例）翻译件，有效期至 示例，可驾自动挡／手动挡／示例车型（示例）</div></div>
+            <div class="row std"><div class="k">完成标准</div><div class="v">实地照片 + 挂牌驻地资源（示例）信息采集</div></div>
+            <div class="row nod"><div class="k">节点</div><div class="v"><div class="v nod-v" data-st="a" data-d="示例"><span class="nd-badge a"><span class="lvdot a"></span>受阻</span><span class="nod-sep">·</span><span class="nd">示例</span></div></div></div>
+          </div>
+
+          <div class="card open" data-dnd="1" data-tg="1">
+            <button class="card-x" title="删除这张卡">✕</button>
+            <div class="ct"><span class="grip" title="拖动此卡可跨列移动或调整顺序">⋮⋮</span>员工安全与风险预案</div>
+            <div class="row own"><div class="k">执行人</div><div class="v"><span class="pill me">本人（示例）</span></div></div>
+            <div class="row src"><div class="k">来源</div><div class="v">例会提出</div></div>
+            <div class="row dsc"><div class="k">说明</div><div class="v">属地人员安全与风险处置预案编制</div></div>
+            <div class="row need keep"><div class="k">需求</div><div class="v">无（可立即启动）</div></div>
+            <div class="row blk"><div class="k">卡点</div><div class="v">无（可立即启动）</div></div>
+            <div class="row imp"><div class="k">影响</div><div class="v">人员抵达（示例）后无安全兜底，直接关系属地安全责任</div></div>
+            <div class="row evi"><div class="k">依据</div><div class="v">上级领导（示例） 示例 例会要求</div></div>
+            <div class="row std"><div class="k">完成标准</div><div class="v">含紧急联络卡（报警 / 急救 / 使领馆）、医疗就医流程、事故上报路径，并全员签收</div></div>
+            <div class="row nod"><div class="k">节点</div><div class="v"><div class="v nod-v" data-st="n" data-d="示例"><span class="nd-badge n"><span class="lvdot n"></span>待启动</span><span class="nod-sep">·</span><span class="nd">示例</span></div></div></div>
+          </div><div class="card open" data-dnd="1" data-tg="1">
+            <button class="card-x" title="删除这张卡">✕</button>
+            <div class="ct"><span class="grip" title="拖动此卡可跨列移动或调整顺序">⋮⋮</span>本人（示例）方案类型A（示例） → 方案类型B（示例） 路径确认</div>
+            <div class="row own"><div class="k">执行人</div><div class="v"><span class="pill me">本人（示例）</span></div></div>
+            <div class="row src"><div class="k">来源</div><div class="v">本人（示例）</div></div>
+            <div class="row dsc"><div class="k">说明</div><div class="v">方案类型A（示例） 只能办一次；示例 到期时本人未满 示例 岁 → 只能转示例区域（示例） 方案类型B（示例）（示例金额 元）</div></div>
+            <div class="row need keep"><div class="k">需求</div><div class="v">示例日期前离岗（示例），提交方案类型B（示例）申请，示例日期之后免审（示例）抵达（示例）；<br>主管部门（示例）通知离岗（示例）审批后出境，示例周期（如 示例 周）后持电子凭证（示例）（示例）抵达（示例），在示例城市B拿到方案类型B（示例）卡。</div></div>
+            <div class="row blk"><div class="k">卡点</div><div class="v">示例日期前需离岗（示例）</div></div>
+            <div class="row imp"><div class="k">影响</div><div class="v">示例日期-5日离岗（示例）；<br>审批期间离岗（示例）示例周期（如 示例 周）。</div></div>
+            <div class="row evi"><div class="k">依据</div><div class="v">示例国家方案政策，中介要求</div></div>
+            <div class="row std"><div class="k">完成标准</div><div class="v">拿到方案类型B（示例）工作凭证卡（示例）</div></div>
+            <div class="row nod"><div class="k">节点</div><div class="v"><div class="v nod-v" data-st="n" data-d="示例"><span class="nd-badge n"><span class="lvdot n"></span>待启动</span><span class="nod-sep">·</span><span class="nd">示例</span></div></div></div>
+          </div>
+
+        </div>
+
+        <div class="col c4" data-dndc="1">
+          <div class="col-h"><div class="nm"><span class="mk"></span>待决策</div><div class="cnt">4</div></div>
+
+          <div class="card open" data-dnd="1" data-tg="1">
+            <button class="card-x" title="删除这张卡">✕</button>
+            <div class="ct"><span class="grip" title="拖动此卡可跨列移动或调整顺序">⋮⋮</span>考察资源审批</div>
+            <div class="row own"><div class="k">执行人</div><div class="v"><span class="pill boss">直属领导（示例）</span></div></div>
+            <div class="row src"><div class="k">来源</div><div class="v">本人（示例）</div></div>
+            <div class="row dsc"><div class="k">说明</div><div class="v">租车（自行出行（示例））赴目标现场（示例）周边实地勘察（示例）</div></div>
+            <div class="row need keep"><div class="k">需求</div><div class="v">审批 + 预算：建议 示例 前</div></div>
+            <div class="row blk"><div class="k">卡点</div><div class="v">未获批则无法开展驻地资源（示例）勘察</div></div>
+            <div class="row imp"><div class="k">影响</div><div class="v">全部下游动作无法启动，示例 抵达（示例）无驻地（示例）与往来（示例）保障</div></div>
+            <div class="row evi"><div class="k">依据</div><div class="v">成本待供应商报价（单次，可随时叫停）</div></div>
+            <div class="row std"><div class="k">完成标准</div><div class="v">获批金额与用车时段，车辆落实</div></div>
+            <div class="row nod"><div class="k">节点</div><div class="v"><div class="v nod-v" data-st="r" data-d="示例"><span class="nd-badge r"><span class="lvdot r"></span>待批</span><span class="nod-sep">·</span><span class="nd">示例</span></div></div></div>
+          </div>
+
+          <div class="card open" data-dnd="1" data-tg="1">
+            <button class="card-x" title="删除这张卡">✕</button>
+            <div class="ct"><span class="grip" title="拖动此卡可跨列移动或调整顺序">⋮⋮</span>往来长期方案选型</div>
+            <div class="row own"><div class="k">执行人</div><div class="v"><span class="pill boss">直属领导（示例）</span></div></div>
+            <div class="row src"><div class="k">来源</div><div class="v">例会提出</div></div>
+            <div class="row dsc"><div class="k">说明</div><div class="v">1. 员工步行／班车往来（示例）　2. 员工自行出行（示例）往来（示例）</div></div>
+            <div class="row need keep"><div class="k">需求</div><div class="v">领导决策：建议 示例 前</div></div>
+            <div class="row blk"><div class="k">卡点</div><div class="v">依赖中介回复与实地勘察结果</div></div>
+            <div class="row imp"><div class="k">影响</div><div class="v">决定驻地资源（示例）筛选条件（能否放宽距离）</div></div>
+            <div class="row evi"><div class="k">依据</div><div class="v">自行出行（示例）需资质（示例） 示例金额 元／人、指定语言（示例）理论科目、约 示例周期（如 示例 个月）拿证；资质文件（示例）可临时驾车不超过 示例（如 示例 天）</div></div>
+            <div class="row std"><div class="k">完成标准</div><div class="v">确定选型并同步更新驻地资源（示例）筛选口径</div></div>
+            <div class="row nod"><div class="k">节点</div><div class="v"><div class="v nod-v" data-st="p" data-d="示例"><span class="nd-badge p"><span class="lvdot p"></span>待决策</span><span class="nod-sep">·</span><span class="nd">示例</span></div></div></div>
+          </div>
+
+          <div class="card open" data-dnd="1" data-tg="1">
+            <button class="card-x" title="删除这张卡">✕</button>
+            <div class="ct"><span class="grip" title="拖动此卡可跨列移动或调整顺序">⋮⋮</span>补贴口径确认</div>
+            <div class="row own"><div class="k">执行人</div><div class="v"><span class="pill boss">直属领导（示例）</span></div></div>
+            <div class="row src"><div class="k">来源</div><div class="v">例会提出</div></div>
+            <div class="row dsc"><div class="k">说明</div><div class="v">基准 示例金额 元／人／月（内部核算基准，非对外承诺）；低于基准 → 公司统租（示例），差价即项目节省；高于 → 发补贴（示例）由员工自租</div></div>
+            <div class="row need keep"><div class="k">需求</div><div class="v">确认执行口径：建议 示例 前</div></div>
+            <div class="row blk"><div class="k">卡点</div><div class="v">依赖最终驻地资源（示例）成本</div></div>
+            <div class="row imp"><div class="k">影响</div><div class="v">决定签约主体与成本归属</div></div>
+            <div class="row evi"><div class="k">依据</div><div class="v">示例：示例（如 示例 房）整包（示例） 示例金额 元 ≈ 示例金额 元／人，每人省 示例金额 元</div></div>
+            <div class="row std"><div class="k">完成标准</div><div class="v">书面确认执行口径</div></div>
+            <div class="row nod"><div class="k">节点</div><div class="v"><div class="v nod-v" data-st="p" data-d="示例"><span class="nd-badge p"><span class="lvdot p"></span>待决策</span><span class="nod-sep">·</span><span class="nd">示例</span></div></div></div>
+          </div>
+
+          <div class="card open" data-dnd="1" data-tg="1">
+            <button class="card-x" title="删除这张卡">✕</button>
+            <div class="ct"><span class="grip" title="拖动此卡可跨列移动或调整顺序">⋮⋮</span>资质考取预算</div>
+            <div class="row own"><div class="k">执行人</div><div class="v"><span class="pill boss">直属领导（示例）</span></div></div>
+            <div class="row src"><div class="k">来源</div><div class="v">本人（示例）</div></div>
+            <div class="row dsc"><div class="k">说明</div><div class="v">仅当往来（示例）选型为「自行出行（示例）」时才需要</div></div>
+            <div class="row need keep"><div class="k">需求</div><div class="v">预算授权</div></div>
+            <div class="row blk"><div class="k">卡点</div><div class="v">若选自行出行（示例），需至少 示例周期（如 示例 个月）后才可考取资质（示例）</div></div>
+            <div class="row imp"><div class="k">影响</div><div class="v">未授权则自行出行（示例）往来（示例）不可落地</div></div>
+            <div class="row evi"><div class="k">依据</div><div class="v">示例金额 元／人，需指定语言（示例）作答理论科目；在此之前可用资质文件（示例）临时驾车不超过 示例（如 示例 天）</div></div>
+            <div class="row std"><div class="k">完成标准</div><div class="v">预算获批并明确报销口径</div></div>
+            <div class="row nod"><div class="k">节点</div><div class="v"><div class="v nod-v" data-st="o" data-d=""><span class="nd-badge o"><span class="lvdot o"></span>条件触发</span></div></div></div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= L2 执行清单 ================= -->
+  <div class="layer l2">
+    <div class="layer-h">
+      <span class="lv">L2</span>
+      <span class="who">执行清单（本人（示例）本人）</span>
+      <span class="note">清单详情 · 含完成标准与风险台账</span>
+    </div>
+    <div class="layer-b">
+
+      <div class="sub-h">
+        <div class="bar"></div><h3>我的动作清单</h3>
+        <span class="hint">每项都有截止日期与可验收的完成标准</span>
+      </div>
+      <table>
+        <thead><tr><th class="drag-col" style="width:3%"></th><th style="width:22%">动作</th><th style="width:10%">截止</th><th style="width:10%">状态</th><th style="width:20%">前置依赖</th><th>完成标准（可验收）</th></tr></thead>
+        <tbody data-trb="1">
+          <tr data-rrow="1">
+            <td class="drag-col"><span class="tgrip" title="拖动整行可调整顺序">⋮⋮</span></td>
+            <td><b>跟进中介回复</b>（驻地资源（示例） + 集体出行（示例）需求）</td>
+            <td class="due-cell" data-d="示例"><b>示例</b></td>
+            <td class="opt ex" data-v="b"><span class="lvdot b"></span><b>进行中</b></td>
+            <td>示例 已提交</td>
+            <td>拿到可看驻地资源（示例）清单与集体出行（示例）报价；无回复则启动第二家中介</td>
+          </tr>
+          <tr data-rrow="1">
+            <td class="drag-col"><span class="tgrip" title="拖动整行可调整顺序">⋮⋮</span></td>
+            <td><b>赴目标现场（示例）周边实地勘察驻地资源（示例）</b></td>
+            <td class="due-cell" data-d="示例"><b>示例</b></td>
+            <td class="opt ex" data-v="a"><span class="lvdot a"></span><b>受阻</b></td>
+            <td><b>需先批准租车</b></td>
+            <td>实地照片 + 挂牌驻地资源（示例）信息采集齐全</td>
+          </tr>
+          <tr data-rrow="1">
+            <td class="drag-col"><span class="tgrip" title="拖动整行可调整顺序">⋮⋮</span></td>
+            <td><b>往来（示例）三方案对比报告</b></td>
+            <td class="due-cell" data-d="示例"><b>示例</b></td>
+            <td class="opt ex" data-v="n"><span class="lvdot n"></span><b>待启动</b></td>
+            <td>依赖中介回复 + 实地勘察</td>
+            <td>含成本 / 合规风险 / 承载人数三维度，并给出推荐项</td>
+          </tr>
+          <tr data-rrow="1">
+            <td class="drag-col"><span class="tgrip" title="拖动整行可调整顺序">⋮⋮</span></td>
+            <td><b>驻地（示例）方案定稿</b>（含补贴（示例）口径）</td>
+            <td class="due-cell" data-d="示例"><b>示例</b></td>
+            <td class="opt ex" data-v="n"><span class="lvdot n"></span><b>待启动</b></td>
+            <td>依赖往来（示例）选型与补贴（示例）口径拍板</td>
+            <td>驻地资源（示例）选定 + 租赁合同签署 + 钥匙交接方案</td>
+          </tr>
+          <tr data-rrow="1">
+            <td class="drag-col"><span class="tgrip" title="拖动整行可调整顺序">⋮⋮</span></td>
+            <td><b>安全与风险预案初稿</b></td>
+            <td class="due-cell" data-d="示例"><b>示例</b></td>
+            <td class="opt ex" data-v="n"><span class="lvdot n"></span><b>待启动</b></td>
+            <td>无（可立即启动）</td>
+            <td>紧急联络卡 + 医疗流程 + 事故上报路径，10/12 前全员签收</td>
+          </tr>
+          <tr data-rrow="1">
+            <td class="drag-col"><span class="tgrip" title="拖动整行可调整顺序">⋮⋮</span></td>
+            <td><b>抵达（示例）首日接站（示例）与入住</b></td>
+            <td class="due-cell" data-d="示例"><b>示例</b></td>
+            <td class="opt ex" data-v="n"><span class="lvdot n"></span><b>待启动</b></td>
+            <td>依赖驻地（示例）定稿 + 培训排期</td>
+            <td>人到 · 房到 · 车到 · 联络卡到（四项齐备）</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="sub-h sec">
+        <div class="bar"></div><h3>风险台账</h3>
+        <span class="hint">每条风险都有触发条件与升级对象 —— 触发即上报，不捂　|　等级图例：<b>红=高</b>　黄=中　蓝=低　绿=无</span>
+      </div>
+      <table>
+        <thead><tr><th class="drag-col" style="width:3%"></th><th style="width:26%">风险</th><th style="width:8%">等级</th><th style="width:20%">触发条件</th><th style="width:30%">预案</th><th>升级对象</th></tr></thead>
+        <tbody data-trb="1">
+          <tr data-rrow="1">
+            <td class="drag-col"><span class="tgrip" title="拖动整行可调整顺序">⋮⋮</span></td>
+            <td><b>目标现场（示例）不在出行工具服务区</b>（往来（示例）问题的根本约束）</td>
+            <td class="opt lvl" data-v="r"><span class="lvdot r"></span><b>高</b></td>
+            <td>已实测证实，非猜测</td>
+            <td>集体出行（示例）为主选；自行出行（示例）为备份（资质（示例）需 示例周期（如 示例 个月），示例 前来不及）；短期出行工具过渡撑一个月</td>
+            <td>直属领导（示例）</td>
+          </tr>
+          <tr data-rrow="1">
+            <td class="drag-col"><span class="tgrip" title="拖动整行可调整顺序">⋮⋮</span></td>
+            <td><b>示例 中介未回复</b></td>
+            <td class="opt lvl" data-v="r"><span class="lvdot r"></span><b>高</b></td>
+            <td>示例 18:00 前无实质回复</td>
+            <td>启动第二家中介；同步降级为电话摸排 + 实地扫街</td>
+            <td>直属领导（示例）</td>
+          </tr>
+          <tr data-rrow="1">
+            <td class="drag-col"><span class="tgrip" title="拖动整行可调整顺序">⋮⋮</span></td>
+            <td><b>考察资源（示例）未获批</b></td>
+            <td class="opt lvl" data-v="r"><span class="lvdot r"></span><b>高</b></td>
+            <td>示例 前未获批准</td>
+            <td>降级：先做线上与电话摸排，请中介代为勘察拍照</td>
+            <td>直属领导（示例）</td>
+          </tr>
+          <tr data-rrow="1">
+            <td class="drag-col"><span class="tgrip" title="拖动整行可调整顺序">⋮⋮</span></td>
+            <td><b>驻地资源（示例）不足或过远，影响 示例</b></td>
+            <td class="opt lvl" data-v="r"><span class="lvdot r"></span><b>高</b></td>
+            <td>示例时间（如 示例）已租公寓到期前</td>
+            <td>启用 示例距离（如 示例 km） 临时公寓（仅剩 示例 规格）过渡；同步加速集体出行（示例）方案</td>
+            <td>直属领导（示例）</td>
+          </tr>
+          <tr data-rrow="1">
+            <td class="drag-col"><span class="tgrip" title="拖动整行可调整顺序">⋮⋮</span></td>
+            <td><b>本地找房效率低</b></td>
+            <td class="opt lvl" data-v="y"><span class="lvdot y"></span><b>中</b></td>
+            <td>持续存在</td>
+            <td>无 租房渠道（示例），多为房主门口挂牌 → 自行出行（示例）扫街直采 + 中介扩充</td>
+            <td>直属领导（示例）</td>
+          </tr>
+          <tr data-rrow="1">
+            <td class="drag-col"><span class="tgrip" title="拖动整行可调整顺序">⋮⋮</span></td>
+            <td><b>后续人数增加后集体出行（示例）不可持续</b>（直属领导（示例）已提出该顾虑）</td>
+            <td class="opt lvl" data-v="b"><span class="lvdot b"></span><b>低</b></td>
+            <td>入职规模超过单车承载能力</td>
+            <td>提前规划小巴／班车或集中居住方案</td>
+            <td>直属领导（示例） + HR</td>
+          </tr>
+          <tr data-rrow="1">
+            <td class="drag-col"><span class="tgrip" title="拖动整行可调整顺序">⋮⋮</span></td>
+            <td><b>首批人数与到岗时间变动（示例）</b></td>
+            <td class="opt lvl" data-v="b"><span class="lvdot b"></span><b>低</b></td>
+            <td>当前示例人数（如 示例 人）于示例日期抵达（示例），若产生变动</td>
+            <td>需HR及时同步给<b>本人（示例）</b>，并开会对齐</td>
+            <td>直属领导（示例） + HR</td>
+          </tr>
+          <tr data-rrow="1">
+            <td class="drag-col"><span class="tgrip" title="拖动整行可调整顺序">⋮⋮</span></td>
+            <td><b>抵达（示例）首日无人对接</b></td>
+            <td class="opt lvl" data-v="g"><span class="lvdot g"></span><b>无</b></td>
+            <td>暂无可预知风险</td>
+            <td>由<b>本人（示例）</b>负责属地接站（示例）、驻地（示例）往来（示例）等</td>
+            <td>直属领导（示例）</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="sub-h sec">
+        <div class="bar"></div><h3>关键时间节点</h3>
+        <span class="hint">红色为硬截止</span>
+      </div>
+      <div class="tl-line">
+        <div class="tl-node done">
+          <div class="tl-dot" data-c="g"></div>
+          <div class="tl-date">示例–示例</div>
+          <div class="tl-txt">方案定稿并移交商务侧</div>
+        </div>
+        <div class="tl-node now">
+          <div class="tl-dot" data-c="b"></div>
+          <div class="tl-date">示例 今日</div>
+          <div class="tl-txt">已提交驻地资源（示例） + 集体出行（示例）往来（示例）需求</div>
+        </div>
+        <div class="tl-node next">
+          <div class="tl-dot" data-c="y"></div>
+          <div class="tl-date">示例 周一</div>
+          <div class="tl-txt">预计中介回复</div>
+        </div>
+        <div class="tl-node next">
+          <div class="tl-dot" data-c="y"></div>
+          <div class="tl-date">示例 前</div>
+          <div class="tl-txt">往来（示例）方案选型完成</div>
+        </div>
+        <div class="tl-node hard">
+          <div class="tl-dot" data-c="r"></div>
+          <div class="tl-date">示例</div>
+          <div class="tl-txt">首批人员到岗（示例）</div>
+        </div>
+        <div class="tl-node far">
+          <div class="tl-dot" data-c="n"></div>
+          <div class="tl-date">示例</div>
+          <div class="tl-txt">本人 方案类型A（示例） 到期<br>需转示例区域（示例） 方案类型B（示例）</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="foot" contenteditable="false">Labib 出品 · 个人项目管理驾驶工具 ｜ 个人博客 · 知识库 · <a href="https://hackerbs.com" target="_blank">hackerbs.com</a> ｜ 个人主页 · <a href="https://halbyte.com" target="_blank">halbyte.com</a></div>
+
+</div>
+
+<script id="__board_editor__">
+(function(){
+  var SEL = '.head-l h1, .head-l .meta span, .guide div, .badge, .status .thr, .kpi .l' +
+            ', .cd-name, .onething .t, .onething .d, .onething .why' +
+            ', .layer-h .who, .layer-h .note, .sub-h h3, .sub-h .hint, th, td' +
+            ', .card .ct, .card .row .v, .tl-date, .tl-txt, #cal-loc';
+
+  var OPT = {
+    lvl: [['r','高'],['y','中'],['b','低'],['g','无']],
+    st : [['r','待批'],['y','待决策'],['b','待确认'],['g','条件触发']],
+    ex : [['b','进行中'],['a','受阻'],['n','待启动'],['g','已完成'],['r','待决策']]
+  };
+  function optsOf(el){ if(el.classList.contains('ex')) return OPT.ex; return el.classList.contains('st') ? OPT.st : OPT.lvl; }
+  function optBadge(el){
+    var v = el.getAttribute('data-v') || 'r', o = optsOf(el), lab = o[0][1];
+    for(var i=0;i<o.length;i++){ if(o[i][0]===v) lab = o[i][1]; }
+    el.innerHTML = '<span class="lvdot '+v+'"></span><b>'+lab+'</b>';
+  }
+  function optSelect(el){
+    var v = el.getAttribute('data-v') || 'r', o = optsOf(el), h = '<select class="lvsel">';
+    for(var i=0;i<o.length;i++){
+      h += '<option value="'+o[i][0]+'"'+(o[i][0]===v?' selected':'')+'>'+o[i][1]+'</option>';
+    }
+    el.innerHTML = h + '</select>';
+    var sl = el.querySelector('select');
+    sl.onchange = function(){ pushUndo(); el.setAttribute('data-v', sl.value); markDirty(); };
+  }
+
+  /* ---------- 节点（状态 + 日期）与 L2 截止 ---------- */
+  var OPTN = [['g','已完成'],['b','进行中'],['y','等回复'],['a','受阻'],['n','待启动'],['r','待批'],['p','待决策'],['o','条件触发']];
+  function fmtD(ds){
+    var p = String(ds).split('-'); if(p.length !== 3) return ds;
+    var t = (+p[1]) + '/' + (+p[2]);
+    return (+p[0] !== new Date().getFullYear()) ? p[0] + '/' + t : t;
+  }
+  function nodBadge(el){
+    var st = el.getAttribute('data-st') || 'n', d = el.getAttribute('data-d') || '';
+    var lab = '待启动';
+    for(var i = 0; i < OPTN.length; i++){ if(OPTN[i][0] === st) lab = OPTN[i][1]; }
+    el.innerHTML = '<span class="nd-badge ' + st + '"><span class="lvdot ' + st + '"></span>' + lab + '</span>' +
+                   (d ? '<span class="nod-sep">·</span><span class="nd">' + fmtD(d) + '</span>' : '');
+  }
+  function nodEdit(el){
+    var st = el.getAttribute('data-st') || 'n', d = el.getAttribute('data-d') || '';
+    var h = '<select class="lvsel">';
+    for(var i = 0; i < OPTN.length; i++){
+      h += '<option value="' + OPTN[i][0] + '"' + (OPTN[i][0] === st ? ' selected' : '') + '>' + OPTN[i][1] + '</option>';
+    }
+    h += '</select><span class="nod-sep">·</span><input type="date" class="nod-inp" value="' + d + '">';
+    el.innerHTML = h;
+    var sl = el.querySelector('select'), di = el.querySelector('input');
+    sl.onchange = function(){ pushUndo(); el.setAttribute('data-st', sl.value); markDirty(); };
+    di.onchange = function(){ pushUndo(); el.setAttribute('data-d', di.value); markDirty(); };
+  }
+  function dueBadge(el){
+    var d = el.getAttribute('data-d') || '';
+    el.innerHTML = d ? '<b>' + fmtD(d) + '</b>' : '';
+  }
+  function dueEdit(el){
+    var d = el.getAttribute('data-d') || '';
+    el.innerHTML = '<input type="date" class="due-inp" value="' + d + '">';
+    var i = el.querySelector('input');
+    i.onchange = function(){ pushUndo(); el.setAttribute('data-d', i.value); markDirty(); };
+  }
+
+  var editing = false, dirty = false, lastCtx = null, fileHandle = null;
+  var dragCard = null, dragRow = null, tlTarget = null;
+  var TLCOL = {g:'#16a34a', b:'#2563eb', y:'#d97706', r:'#dc2626', n:'#9ca3af', p:'#7c3aed'};
+
+  function all(){ return Array.prototype.slice.call(document.querySelectorAll(SEL)); }
+
+  function showToast(msg){
+    var t = document.getElementById('ed-toast');
+    if(!t){ t = document.createElement('div'); t.id = 'ed-toast'; document.body.appendChild(t); }
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(t._tm);
+    t._tm = setTimeout(function(){ t.classList.remove('show'); }, 2600);
+  }
+
+  function updateBadge(){
+    var b = document.getElementById('bSave');
+    if(!b) return;
+    b.textContent = dirty ? '保存 ●' : '保存';
+    b.classList.toggle('dirty', dirty);
+    var e = document.getElementById('bEd');
+    if(e) e.textContent = editing ? (dirty ? '完成编辑（未保存）' : '完成编辑') : '编辑';
+    var u = document.getElementById('bUndo'); if(u) u.disabled = !UNDO.length;
+    var mi2 = document.getElementById('ed-mini'); if(mi2) mi2.classList.toggle('dirty', dirty);
+    var y = document.getElementById('bRedo'); if(y) y.disabled = !REDO.length;
+  }
+  function markDirty(){ dirty = true; updateBadge(); }
+
+  /* ---------- 日期 ---------- */
+  function daysTo(ds){
+    if(!ds) return null;
+    var p = String(ds).split('-'); if(p.length < 3) return null;
+    var t = new Date(+p[0], (+p[1]) - 1, +p[2]);
+    var n = new Date(); n.setHours(0,0,0,0);
+    return Math.round((t - n) / 86400000);
+  }
+  function dayTxt(d){ return d === null ? '—' : (d < 0 ? ('已过期 ' + (-d) + ' 天') : (d + ' 天')); }
+  function syncDays(){
+    var cd = document.querySelector('.kpi.cd');
+    if(!cd) return;
+    var di = document.getElementById('cd-next-date');
+    var ds = (di && di.value) ? di.value : cd.getAttribute('data-deadline');
+    var b = cd.querySelector('.n');
+    if(b) b.textContent = dayTxt(daysTo(ds));
+  }
+
+  /* ---------- 计数 ---------- */
+  var countsBusy = false;
+  function setText(el, v){ if(el && el.textContent !== v) el.textContent = v; }
+  function syncCounts(){
+    if(countsBusy) return;
+    countsBusy = true;
+    try{
+      var ks = ['c1','c2','c3','c4'];
+      for(var i=0;i<ks.length;i++){
+        var col = document.querySelector('.col.' + ks[i]);
+        if(!col) continue;
+        var n = String(col.querySelectorAll('.card').length);
+        setText(col.querySelector('.cnt'), n);
+        setText(document.querySelector('.kpi[data-sync="' + ks[i] + '"] .n'), n);
+      }
+    } finally { countsBusy = false; }
+  }
+
+  function bindX(){
+    Array.prototype.slice.call(document.querySelectorAll('.card-x')).forEach(function(b){
+      b.onclick = function(){
+        var card = b.parentNode;
+        if(card && card.parentNode && confirm('删除这张卡片？')){
+          pushUndo();
+          card.parentNode.removeChild(card); syncCounts(); markDirty();
+        }
+      };
+    });
+  }
+
+  function setEdit(on){
+    if(on && !editing) pushUndo();
+    editing = on;
+    document.body.classList.toggle('editing', on);
+    all().forEach(function(el){
+      if(on){ if(!el.classList.contains('opt') && !el.classList.contains('nod-v') && !el.classList.contains('due-cell') && !el.classList.contains('drag-col')) el.setAttribute('contenteditable','true'); }
+      else el.removeAttribute('contenteditable');
+    });
+    Array.prototype.slice.call(document.querySelectorAll('td.opt')).forEach(function(el){
+      if(on) optSelect(el); else optBadge(el);
+    });
+    Array.prototype.slice.call(document.querySelectorAll('.nod-v')).forEach(function(el){
+      if(on) nodEdit(el); else nodBadge(el);
+    });
+    Array.prototype.slice.call(document.querySelectorAll('td.due-cell')).forEach(function(el){
+      if(on) dueEdit(el); else dueBadge(el);
+    });
+    bindX(); syncCounts(); syncDays(); updateBadge();
+    expandAll(on);
+    if(on){ var nn = document.getElementById('ed-note'); if(nn) nn.dataset.closed = '0'; showNote(); }
+    else hideNote();
+    if(on && bar.classList.contains('mini')) setBarState('open');
+  }
+
+  document.addEventListener('click', function(e){
+    var t = e.target;
+    if(!t || !t.closest) return;
+    var td = t.closest('td');
+    if(td){ lastCtx = {type:'row', node: td.parentNode}; return; }
+    var cd = t.closest('.card');
+    if(cd){ lastCtx = {type:'card', node: cd}; }
+  }, true);
+
+  document.addEventListener('input',  function(e){
+    if(!editing) return;
+    if(e.target && e.target.id === 'cal-loc') buildCal();
+    if(!typeSess){ pushUndo(); typeSess = true; }
+    clearTimeout(typeTm); typeTm = setTimeout(function(){ typeSess = false; }, 800);
+    markDirty();
+  }, true);
+  document.addEventListener('change', function(){ if(editing) markDirty(); }, true);
+
+  document.addEventListener('click', function(e){
+    if(!editing) return;
+    var cell = e.target.closest ? e.target.closest('.cal .dy') : null;
+    if(!cell || cell.classList.contains('blank')) return;
+    var g = document.getElementById('cal-grid'); if(!g) return;
+    e.stopPropagation();
+    pushUndo();
+    var cur = cell.getAttribute('data-t');
+    var next = cur === 'w' ? 'r' : (cur === 'r' ? 'h' : 'w');
+    var o = {};
+    try{ o = JSON.parse(g.getAttribute('data-ov') || '{}') || {}; }catch(_){ o = {}; }
+    var p = cell.getAttribute('data-d').split('-');
+    var def = calDefault(new Date(+p[0], +p[1] - 1, +p[2]));
+    if(next === def) delete o[cell.getAttribute('data-d')];
+    else o[cell.getAttribute('data-d')] = next;
+    g.setAttribute('data-ov', JSON.stringify(o));
+    buildCal(); markDirty();
+  });
+
+  document.addEventListener('paste', function(e){
+    if(!editing) return;
+    e.preventDefault();
+    var txt = (e.clipboardData || window.clipboardData).getData('text/plain');
+    document.execCommand('insertText', false, txt);
+  });
+
+  function tidy(root){
+    Array.prototype.slice.call(root.querySelectorAll('tr')).forEach(function(tr){
+      if(tr.children.length === 0 && tr.parentNode) tr.parentNode.removeChild(tr);
+    });
+    Array.prototype.slice.call(root.querySelectorAll('tbody > br, thead > br, table > br'))
+      .forEach(function(b){ if(b.parentNode) b.parentNode.removeChild(b); });
+  }
+
+  function addItem(){
+    if(!editing || !lastCtx){ alert('请先按「编辑」，然后点一下要复制的那一行（或那张卡）'); return; }
+    var n = lastCtx.node.cloneNode(true);
+    Array.prototype.slice.call(n.querySelectorAll('*')).forEach(function(el){
+      el.removeAttribute('contenteditable');
+    });
+    if(lastCtx.type === 'row'){
+      Array.prototype.slice.call(n.children).forEach(function(td){
+        if(td.classList.contains('drag-col')) return;
+        td.innerHTML = '';
+      });
+    }else{
+      Array.prototype.slice.call(n.querySelectorAll('.ct')).forEach(function(ct){
+        var g = ct.querySelector('.grip'); ct.innerHTML = g ? g.outerHTML : '';
+      });
+      Array.prototype.slice.call(n.querySelectorAll('.k, .v')).forEach(function(x){ x.innerHTML = ''; });
+    }
+    pushUndo();
+    lastCtx.node.parentNode.insertBefore(n, lastCtx.node.nextSibling);
+    n.removeAttribute('data-dnd'); initDnD();
+    n.removeAttribute('data-tg'); initCollapse();
+    setEdit(true); markDirty();
+  }
+
+  function makeDrag(handle, box){
+    var drag = null;
+    handle.style.cursor = 'move';
+    handle.style.userSelect = 'none';
+    handle.style.touchAction = 'none';
+    handle.title = '按住此处可拖动';
+    handle.addEventListener('pointerdown', function(e){
+      if(e.target.closest && e.target.closest('button') && !e.target.closest('.drag-handle')) return;
+      var r = box.getBoundingClientRect();
+      drag = {dx: e.clientX - r.left, dy: e.clientY - r.top};
+      box.style.right = 'auto';
+      box.style.left = r.left + 'px';
+      box.style.top  = r.top  + 'px';
+      try{ handle.setPointerCapture(e.pointerId); }catch(_){}
+      e.preventDefault();
+    });
+    handle.addEventListener('pointermove', function(e){
+      if(!drag) return;
+      var x = Math.min(Math.max(6, e.clientX - drag.dx), window.innerWidth  - box.offsetWidth  - 6);
+      var y = Math.min(Math.max(6, e.clientY - drag.dy), window.innerHeight - box.offsetHeight - 6);
+      box.style.left = x + 'px'; box.style.top = y + 'px';
+    });
+    handle.addEventListener('pointerup',     function(){ drag = null; });
+    handle.addEventListener('pointercancel', function(){ drag = null; });
+  }
+
+  /* ---------- 时间节点颜色可选 ---------- */
+  var TLNAME = {g:'绿·完成/无', b:'蓝·当前/进行', y:'黄·下一步', r:'红·硬截止', n:'灰·远期', p:'紫·备选'};
+  function hidePal(){ var p=document.getElementById('tl-pal'); if(p) p.classList.remove('show'); tlTarget=null; }
+  function initTl(){
+    var TLMAP = {done:'g', now:'b', next:'y', far:'n', hard:'r'};
+    var pal = document.createElement('div'); pal.id='tl-pal';
+    ['g','b','y','r','n','p'].forEach(function(c){
+      var s=document.createElement('span'); s.className='sw'; s.dataset.c=c; s.title=TLNAME[c];
+      s.style.background=TLCOL[c];
+      s.addEventListener('click', function(){
+        if(tlTarget){ tlTarget.setAttribute('data-c', c); tlTarget.style.background=''; tlTarget.style.boxShadow=''; markDirty(); }
+        hidePal();
+      });
+      pal.appendChild(s);
+    });
+    document.body.appendChild(pal);
+    document.querySelectorAll('.tl-node').forEach(function(node){
+      var dot = node.querySelector('.tl-dot'); if(!dot) return;
+      for(var k in TLMAP){ if(node.classList.contains(k)){ dot.setAttribute('data-c', TLMAP[k]); break; } }
+      if(!dot.getAttribute('data-c')) dot.setAttribute('data-c','n');
+      dot.addEventListener('click', function(e){
+        if(!editing) return;
+        e.stopPropagation();
+        tlTarget = dot;
+        var r = dot.getBoundingClientRect();
+        pal.style.left = Math.min(r.left, window.innerWidth-190) + 'px';
+        pal.style.top  = (r.bottom + 6) + 'px';
+        pal.classList.add('show');
+      });
+    });
+    document.addEventListener('click', function(e){
+      if(tlTarget && !e.target.closest('#tl-pal') && !e.target.closest('.tl-dot')) hidePal();
+    });
+  }
+
+  /* ---------- 卡片拖拽（跨列 / 排序） ---------- */
+  function getPh(){ var p=document.querySelector('.kb-ph'); if(!p){ p=document.createElement('div'); p.className='kb-ph'; } return p; }
+  function clearPh(){ var p=document.querySelector('.kb-ph'); if(p && p.parentNode) p.parentNode.removeChild(p); }
+  function getCardAfter(col, y){
+    var cards = Array.prototype.slice.call(col.querySelectorAll('.card:not(.dragging)'));
+    var closest = {dist: -Infinity, el: null};
+    cards.forEach(function(c){
+      var box = c.getBoundingClientRect();
+      var off = y - box.top - box.height/2;
+      if(off < 0 && off > closest.dist){ closest = {dist: off, el: c}; }
+    });
+    return closest.el;
+  }
+  function initDnD(){
+    document.querySelectorAll('.card').forEach(function(card){
+      if(card.dataset.dnd) return;
+      card.dataset.dnd = '1';
+      var grip = card.querySelector('.grip');
+      if(grip){
+        var on = function(){ if(!editing) return; card.setAttribute('draggable','true'); };
+        grip.addEventListener('pointerdown', on);
+        grip.addEventListener('touchstart', on, {passive:true});
+      }
+      card.addEventListener('dragstart', function(e){
+        dragCard = card;
+        e.dataTransfer.effectAllowed = 'move';
+        try{ e.dataTransfer.setData('text/plain',''); }catch(_){}
+        setTimeout(function(){ card.classList.add('dragging'); }, 0);
+      });
+      card.addEventListener('dragend', function(){
+        card.setAttribute('draggable','false');
+        card.classList.remove('dragging');
+        dragCard = null; clearPh();
+      });
+    });
+    document.querySelectorAll('.col').forEach(function(col){
+      if(col.dataset.dndc) return;
+      col.dataset.dndc = '1';
+      col.addEventListener('dragover', function(e){
+        if(!dragCard) return;
+        e.preventDefault();
+        var ph = getPh();
+        var after = getCardAfter(col, e.clientY);
+        if(after == null) col.appendChild(ph); else col.insertBefore(ph, after);
+      });
+      col.addEventListener('drop', function(e){
+        if(!editing || !dragCard) return;
+        e.preventDefault();
+        var ph = col.querySelector('.kb-ph');
+        var ref = ph ? ph.nextSibling : null;
+        clearPh();
+        pushUndo();
+        if(ref) col.insertBefore(dragCard, ref); else col.appendChild(dragCard);
+        syncCounts(); markDirty();
+      });
+    });
+  }
+
+  /* ---------- 卡片折叠 / 展开 ---------- */
+  function expandAll(on){ document.querySelectorAll('.card').forEach(function(c){ c.classList.toggle('open', on); }); syncKbBtn(); }
+  function syncKbBtn(){
+    var b = document.getElementById('kbToggle'); if(!b) return;
+    var cards = document.querySelectorAll('.card'); if(!cards.length) return;
+    var allOpen = true;
+    cards.forEach(function(c){ if(!c.classList.contains('open')) allOpen = false; });
+    b.textContent = allOpen ? '全部收起' : '全部展开';
+  }
+  function initCollapse(){
+    var PREF = ['需求','卡点','依据','说明','来源'];
+    document.querySelectorAll('.card').forEach(function(card){
+      var rows = Array.prototype.slice.call(card.children).filter(function(x){ return x.classList.contains('row'); });
+      var keep = null;
+      for(var i=0; i<PREF.length && !keep; i++){
+        for(var j=0; j<rows.length; j++){
+          var k = rows[j].querySelector('.k');
+          if(k && k.textContent.replace(/\s|\u200b/g,'').trim() === PREF[i]){ keep = rows[j]; break; }
+        }
+      }
+      var target = keep || (rows.length ? rows[0] : null);
+      if(target) target.classList.add('keep');
+      if(!card.dataset.tg){
+        card.dataset.tg = '1';
+        card.addEventListener('click', function(e){
+          if(editing) return;
+          if(e.target.closest('.card-x') || e.target.closest('.grip')) return;
+          card.classList.toggle('open');
+          syncKbBtn();
+        });
+      }
+    });
+  }
+
+  /* ---------- 撤销 / 恢复 ---------- */
+  var UNDO = [], REDO = [], undoBusy = false, typeSess = false, typeTm = null;
+  function snap(){ var w = document.querySelector('.wrap'); return w ? w.innerHTML : ''; }
+  function pushUndo(){
+    if(undoBusy) return;
+    UNDO.push(snap()); if(UNDO.length > 60) UNDO.shift(); REDO.length = 0;
+  }
+  function rebindAll(){
+    Array.prototype.slice.call(document.querySelectorAll('.card')).forEach(function(c){
+      c.removeAttribute('data-dnd'); c.removeAttribute('data-tg');
+    });
+    Array.prototype.slice.call(document.querySelectorAll('.col')).forEach(function(c){
+      c.removeAttribute('data-dndc');
+    });
+    Array.prototype.slice.call(document.querySelectorAll('tbody tr')).forEach(function(t){
+      t.removeAttribute('data-rrow');
+    });
+    Array.prototype.slice.call(document.querySelectorAll('tbody')).forEach(function(t){
+      t.removeAttribute('data-trb');
+    });
+    clearPh(); clearRowPh();
+    bindX(); initDnD(); initRowDnd(); initCollapse(); initKbTools(); wireDate(); wireCal(); buildCal(); syncCounts(); syncDays();
+    lastCtx = null;
+  }
+  function restore(h){
+    var w = document.querySelector('.wrap'); if(!w) return;
+    undoBusy = true;
+    w.innerHTML = h;
+    rebindAll();
+    if(editing) setEdit(true);
+    undoBusy = false; markDirty();
+  }
+  function undo(){
+    if(!UNDO.length){ showToast('没有可撤销的操作'); return; }
+    REDO.push(snap()); restore(UNDO.pop()); showToast('已撤销');
+  }
+  function redo(){
+    if(!REDO.length){ showToast('没有可恢复的操作'); return; }
+    UNDO.push(snap()); restore(REDO.pop()); showToast('已恢复');
+  }
+  function wireDate(){
+    var di = document.getElementById('cd-next-date');
+    if(!di) return;
+    di.addEventListener('focus',  function(){ pushUndo(); });
+    di.addEventListener('change', function(){ syncDays(); markDirty(); });
+    di.addEventListener('input',  syncDays);
+  }
+
+  /* ---------- 导出高清图片 ---------- */
+  function cleanClone(){
+    syncDays(); syncCounts();
+    var di = document.getElementById('cd-next-date');
+    if(di) di.setAttribute('value', di.value);
+    var nm = document.getElementById('cd-next-name');
+    if(nm) nm.removeAttribute('contenteditable');
+    var cm = document.getElementById('cal-month');
+    if(cm) cm.setAttribute('value', cm.value);
+    var c = document.documentElement.cloneNode(true);
+    var cb = c.querySelector('body');
+    if(cb){ cb.classList.remove('editing'); cb.classList.remove('exporting'); }
+    var di2 = c.querySelector('#cd-next-date');
+    if(di2 && c.ownerDocument){
+      var sp = c.ownerDocument.createElement('span');
+      sp.textContent = di2.getAttribute('value') || '';
+      if(di2.parentNode) di2.parentNode.replaceChild(sp, di2);
+    }
+    ['#ed-bar','#ed-note','#ed-toast','#tl-pal','#kb-tools','#__board_editor__'].forEach(function(sel){
+      var e = c.querySelector(sel); if(e && e.parentNode) e.parentNode.removeChild(e);
+    });
+    Array.prototype.slice.call(c.querySelectorAll('[contenteditable]'))
+      .forEach(function(el){ el.removeAttribute('contenteditable'); });
+    Array.prototype.slice.call(c.querySelectorAll('.card-x'))
+      .forEach(function(el){ if(el.parentNode) el.parentNode.removeChild(el); });
+    Array.prototype.slice.call(c.querySelectorAll('td.opt')).forEach(function(el){
+      var sl = el.querySelector('select');
+      if(sl) el.setAttribute('data-v', sl.value);
+      optBadge(el);
+    });
+    Array.prototype.slice.call(c.querySelectorAll('.nod-v')).forEach(function(el){
+      var nsl = el.querySelector('select'), ninp = el.querySelector('input.nod-inp');
+      if(nsl) el.setAttribute('data-st', nsl.value);
+      if(ninp) el.setAttribute('data-d', ninp.value);
+      nodBadge(el);
+    });
+    Array.prototype.slice.call(c.querySelectorAll('td.due-cell')).forEach(function(el){
+      var dinp = el.querySelector('input.due-inp');
+      if(dinp) el.setAttribute('data-d', dinp.value);
+      dueBadge(el);
+    });
+    Array.prototype.slice.call(c.querySelectorAll('*')).forEach(function(el){
+      el.removeAttribute('data-page-node-id'); el.removeAttribute('data-dm-ref');
+    });
+    tidy(c);
+    var hd = c.querySelector('head');
+    if(hd && c.ownerDocument){
+      var stEl = c.ownerDocument.createElement('style');
+      stEl.textContent = '.grip{display:none !important;}.ct::after{content:"" !important;}.card-x{display:none !important;}.drag-col{display:none !important;}.tgrip{display:none !important;}';
+      hd.appendChild(stEl);
+    }
+    return c;
+  }
+  function exportPng(){
+    try{
+      document.body.classList.add('exporting');
+      var wrapEl = document.querySelector('.wrap');
+      var W = Math.max(document.documentElement.scrollWidth, (wrapEl ? wrapEl.offsetWidth : 1500) + 60);
+      var H = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
+      var c = cleanClone();
+      document.body.classList.remove('exporting');
+      var src = new XMLSerializer().serializeToString(c);
+      var scale = Math.min(3, 15000 / Math.max(W, H));
+      if(scale < 1.5) scale = 1.5;
+      var cw = Math.round(W * scale), chh = Math.round(H * scale);
+      var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="' + cw + '" height="' + chh +
+                '" viewBox="0 0 ' + W + ' ' + H + '">' +
+                '<foreignObject x="0" y="0" width="100%" height="100%">' + src + '</foreignObject></svg>';
+      var img = new Image();
+      img.onload = function(){
+        var cv = document.createElement('canvas');
+        cv.width = cw; cv.height = chh;
+        var ctx = cv.getContext('2d');
+        ctx.fillStyle = '#f4f6f9'; ctx.fillRect(0, 0, cw, chh);
+        ctx.drawImage(img, 0, 0, cw, chh);
+        cv.toBlob(function(b){
+          if(!b){ showToast('导出失败，请重试'); return; }
+          var a = document.createElement('a');
+          a.href = URL.createObjectURL(b);
+          a.download = thisName().replace(/\.html?$/i, '') + '_' + stamp() + '.png';
+          document.body.appendChild(a); a.click(); document.body.removeChild(a);
+          setTimeout(function(){ URL.revokeObjectURL(a.href); }, 5000);
+          showToast('已导出高清图片 ' + cw + '×' + chh);
+        }, 'image/png');
+      };
+      img.onerror = function(){ showToast('导出失败，可改用浏览器自带打印'); };
+      img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+      showToast('正在生成高清图片…');
+    }catch(err){
+      document.body.classList.remove('exporting');
+      showToast('导出失败：' + (err && err.message ? err.message : err));
+    }
+  }
+
+  /* ---------- 进展看板顶栏：全部展开 / 全部折叠 ---------- */
+  function initKbTools(){
+    var old = document.getElementById('kb-tools');
+    if(old && old.parentNode) old.parentNode.removeChild(old);
+    var host = null;
+    Array.prototype.slice.call(document.querySelectorAll('.sub-h')).forEach(function(x){
+      var t = x.querySelector('h3');
+      if(t && t.textContent.replace(/\s|\u200b/g, '').indexOf('进展看板') >= 0) host = x;
+    });
+    if(!host) return;
+    var sp = document.createElement('span');
+    sp.id = 'kb-tools';
+    sp.innerHTML = '<button id="kbToggle">全部展开</button>';
+    host.appendChild(sp);
+    document.getElementById('kbToggle').onclick = function(){
+      var cards = document.querySelectorAll('.card');
+      var allOpen = true;
+      cards.forEach(function(c){ if(!c.classList.contains('open')) allOpen = false; });
+      expandAll(!allOpen);
+      showToast(allOpen ? '已全部收起' : '已全部展开');
+    };
+    syncKbBtn();
+    /* L0 统计卡点击 → 跳转进展看板 */
+    document.querySelectorAll('.kpi[data-sync]').forEach(function(k){
+      if(k.dataset.kjump) return;
+      k.dataset.kjump = '1';
+      k.title = '点击跳转到进展看板';
+      k.addEventListener('click', function(){
+        host.scrollIntoView({behavior:'smooth', block:'start'});
+      });
+    });
+  }
+
+  /* ---------- 提示框：吸附工具条 + 可关闭 ---------- */
+  function showNote(){
+    var n = document.getElementById('ed-note'); if(!n) return;
+    if(n.dataset.closed === '1') return;
+    var b = document.getElementById('ed-bar');
+    n.style.right = 'auto';
+    if(b){
+      var r = b.getBoundingClientRect();
+      n.style.top  = (r.bottom + 8) + 'px';
+      n.style.left = Math.max(6, Math.min(r.left, window.innerWidth - n.offsetWidth - 6)) + 'px';
+    }
+    n.classList.add('show');
+  }
+  function hideNote(){ var n = document.getElementById('ed-note'); if(n) n.classList.remove('show'); }
+
+  /* ---------- 当月日历（不内置节假日；编辑态点日期可自定义类型：工作日 / 休息日 / 节假日） ---------- */
+  var JH = {};
+  var REST_DOW = [0, 6]; /* 默认休息日：周日 / 周六（可按所在地调整，如需改这里） */
+  function pad2(v){ return (v < 10 ? '0' : '') + v; }
+  function calDefault(d){
+    var hol = JH[d.getMonth() + 1 + '-' + d.getDate()] || '';
+    if(hol) return 'h';
+    return REST_DOW.indexOf(d.getDay()) >= 0 ? 'r' : 'w';
+  }
+  function calTypeLabel(t){ return t === 'h' ? '节假日' : (t === 'r' ? '休息日' : '工作日'); }
+  function buildCal(){
+    var g = document.getElementById('cal-grid'); if(!g) return;
+    var now = new Date();
+    var mi = document.getElementById('cal-month');
+    var mv = (mi && mi.value) ? mi.value : '';
+    var Y, M;
+    if(/^\d{4}-\d{2}$/.test(mv)){ Y = +mv.slice(0, 4); M = +mv.slice(5, 7); }
+    else { Y = now.getFullYear(); M = now.getMonth() + 1; }
+    if(M < 1) M = 1; if(M > 12) M = 12;
+    if(mi && !mi.value){ mi.value = Y + '-' + pad2(M); mi.setAttribute('value', mi.value); }
+    var tt = document.getElementById('cal-title');
+    if(tt){
+      if(Y === now.getFullYear() && M === now.getMonth() + 1){
+        var WD = ['周日','周一','周二','周三','周四','周五','周六'];
+        tt.textContent = Y + '年' + M + '月' + now.getDate() + '日 · ' + WD[now.getDay()];
+      } else {
+        tt.textContent = Y + '年 · ' + M + '月';
+      }
+    }
+    var ov = {};
+    try{ ov = JSON.parse(g.getAttribute('data-ov') || '{}') || {}; }catch(_){ ov = {}; }
+    var first = new Date(Y, M - 1, 1).getDay();
+    var dim = new Date(Y, M, 0).getDate();
+    var tStr = Y + '-' + pad2(M) + '-' + pad2(now.getDate());
+    var h = '<div class="wd">日</div><div class="wd">一</div><div class="wd">二</div><div class="wd">三</div><div class="wd">四</div><div class="wd">五</div><div class="wd">六</div>';
+    for(var i = 0; i < first; i++) h += '<div class="dy blank"></div>';
+    for(var d = 1; d <= dim; d++){
+      var ds = Y + '-' + pad2(M) + '-' + pad2(d);
+      var def = calDefault(new Date(Y, M - 1, d));
+      var tp = ov[ds] || def;
+      h += '<div class="dy t-' + tp + (ds === tStr ? ' today' : '') + '" data-d="' + ds + '" data-t="' + tp + '">' +
+           '<span class="d">' + d + '</span><span class="hn">' + calTypeLabel(tp) + '</span></div>';
+    }
+    g.innerHTML = h;
+    var ty = document.getElementById('cal-ty');
+    if(ty){
+      var tdef = calDefault(now);
+      var ttp = ov[now.getFullYear() + '-' + pad2(now.getMonth() + 1) + '-' + pad2(now.getDate())] || tdef;
+      ty.innerHTML = '<span class="ty ' + ttp + '">' + calTypeLabel(ttp) + '</span>';
+    }
+    var wrap = document.getElementById('cal-wrap');
+    var bt = document.getElementById('calToggle');
+    if(bt) bt.textContent = (wrap && wrap.classList.contains('open')) ? '收起' : '展开';
+    var lay = document.getElementById('cal-layer');
+    if(lay) lay.classList.toggle('cal-open', !!(wrap && wrap.classList.contains('open')));
+  }
+  function setCalOpen(on){
+    var w = document.getElementById('cal-wrap'); if(!w) return;
+    w.classList.toggle('open', on);
+    var lay = document.getElementById('cal-layer');
+    if(lay) lay.classList.toggle('cal-open', on);
+    var b = document.getElementById('calToggle');
+    if(b) b.textContent = on ? '收起' : '展开';
+    markDirty();
+  }
+  function wireCal(){
+    var mi = document.getElementById('cal-month');
+    if(mi){
+      mi.addEventListener('change', function(){ buildCal(); markDirty(); });
+      mi.addEventListener('input',  function(){ buildCal(); });
+    }
+    var b = document.getElementById('calToggle');
+    if(b) b.onclick = function(){
+      var w = document.getElementById('cal-wrap');
+      setCalOpen(!(w && w.classList.contains('open')));
+    };
+    var tw = document.getElementById('cal-title-wrap');
+    if(tw) tw.addEventListener('click', function(){
+      if(!editing) return;
+      var m2 = document.getElementById('cal-month');
+      if(!m2) return;
+      try{ if(m2.showPicker) m2.showPicker(); else m2.focus(); }catch(_){ m2.focus(); }
+    });
+  }
+
+  /* ---------- 表格整行拖拽（跨行排序） ---------- */
+  function getRowPh(tb){
+    var p = tb.querySelector('.row-ph');
+    if(!p){
+      p = document.createElement('tr'); p.className = 'row-ph';
+      var td = document.createElement('td');
+      td.colSpan = (tb.rows.length && tb.rows[0].cells.length) ? tb.rows[0].cells.length : 5;
+      p.appendChild(td);
+    }
+    return p;
+  }
+  function clearRowPh(){ var p = document.querySelector('.row-ph'); if(p && p.parentNode) p.parentNode.removeChild(p); }
+  function getTrAfter(tb, y){
+    var rows = Array.prototype.slice.call(tb.querySelectorAll('tr:not(.row-dragging):not(.row-ph)'));
+    var closest = {dist: -Infinity, el: null};
+    rows.forEach(function(r){
+      var box = r.getBoundingClientRect();
+      var off = y - box.top - box.height/2;
+      if(off < 0 && off > closest.dist){ closest = {dist: off, el: r}; }
+    });
+    return closest.el;
+  }
+  function initRowDnd(){
+    Array.prototype.slice.call(document.querySelectorAll('tbody tr')).forEach(function(tr){
+      if(tr.dataset.rrow) return;
+      tr.dataset.rrow = '1';
+      var grip = tr.querySelector('.tgrip');
+      if(grip){
+        var on = function(){ if(!editing) return; tr.setAttribute('draggable','true'); };
+        grip.addEventListener('pointerdown', on);
+        grip.addEventListener('touchstart', on, {passive:true});
+      }
+      tr.addEventListener('dragstart', function(e){
+        dragRow = tr;
+        e.dataTransfer.effectAllowed = 'move';
+        try{ e.dataTransfer.setData('text/plain',''); }catch(_){}
+        setTimeout(function(){ tr.classList.add('row-dragging'); }, 0);
+      });
+      tr.addEventListener('dragend', function(){
+        tr.setAttribute('draggable','false');
+        tr.classList.remove('row-dragging');
+        dragRow = null; clearRowPh();
+      });
+    });
+    Array.prototype.slice.call(document.querySelectorAll('tbody')).forEach(function(tb){
+      if(tb.dataset.trb) return;
+      tb.dataset.trb = '1';
+      tb.addEventListener('dragover', function(e){
+        if(!dragRow) return;
+        e.preventDefault();
+        var ph = getRowPh(tb);
+        var after = getTrAfter(tb, e.clientY);
+        if(after == null) tb.appendChild(ph); else tb.insertBefore(ph, after);
+      });
+      tb.addEventListener('drop', function(e){
+        if(!editing || !dragRow) return;
+        e.preventDefault();
+        var ph = tb.querySelector('.row-ph');
+        var ref = ph ? ph.nextSibling : null;
+        clearRowPh();
+        pushUndo();
+        if(ref) tb.insertBefore(dragRow, ref); else tb.appendChild(dragRow);
+        markDirty();
+      });
+    });
+  }
+
+  function stamp(){
+    var d = new Date(), z = function(v){ return (v < 10 ? '0' : '') + v; };
+    return d.getFullYear() + z(d.getMonth() + 1) + z(d.getDate()) + '_' + z(d.getHours()) + z(d.getMinutes());
+  }
+  function thisName(){
+    try{
+      var n = decodeURIComponent(location.pathname.split('/').pop());
+      if(n && /\.html?$/i.test(n)) return n;
+    }catch(_){}
+    return '工作看板.html';
+  }
+
+  function buildHtml(){
+    syncDays(); syncCounts();
+    var di = document.getElementById('cd-next-date');
+    if(di) di.setAttribute('value', di.value);
+    var nm = document.getElementById('cd-next-name');
+    if(nm) nm.removeAttribute('contenteditable');
+    var cm = document.getElementById('cal-month');
+    if(cm) cm.setAttribute('value', cm.value);
+
+    var c = document.documentElement.cloneNode(true);
+    var cb = c.querySelector('body');
+    if(cb){ cb.classList.remove('editing'); cb.classList.remove('exporting'); }
+    var b1 = c.querySelector('#ed-bar');  if(b1 && b1.parentNode) b1.parentNode.removeChild(b1);
+    var b2 = c.querySelector('#ed-note'); if(b2 && b2.parentNode) b2.parentNode.removeChild(b2);
+    var b3 = c.querySelector('#ed-toast');if(b3 && b3.parentNode) b3.parentNode.removeChild(b3);
+    var b4 = c.querySelector('#tl-pal');  if(b4 && b4.parentNode) b4.parentNode.removeChild(b4);
+    var b5 = c.querySelector('#kb-tools');if(b5 && b5.parentNode) b5.parentNode.removeChild(b5);
+    Array.prototype.slice.call(c.querySelectorAll('[contenteditable]'))
+      .forEach(function(el){ el.removeAttribute('contenteditable'); });
+    Array.prototype.slice.call(c.querySelectorAll('#__dm_no_drag_style__, #__dm_bindable_badge_style__'))
+      .forEach(function(el){ if(el.parentNode) el.parentNode.removeChild(el); });
+    Array.prototype.slice.call(c.querySelectorAll('td.opt')).forEach(function(el){
+      var sl = el.querySelector('select');
+      if(sl) el.setAttribute('data-v', sl.value);
+      optBadge(el);
+    });
+    Array.prototype.slice.call(c.querySelectorAll('.nod-v')).forEach(function(el){
+      var nsl = el.querySelector('select'), ninp = el.querySelector('input.nod-inp');
+      if(nsl) el.setAttribute('data-st', nsl.value);
+      if(ninp) el.setAttribute('data-d', ninp.value);
+      nodBadge(el);
+    });
+    Array.prototype.slice.call(c.querySelectorAll('td.due-cell')).forEach(function(el){
+      var dinp = el.querySelector('input.due-inp');
+      if(dinp) el.setAttribute('data-d', dinp.value);
+      dueBadge(el);
+    });
+    Array.prototype.slice.call(c.querySelectorAll('*')).forEach(function(el){
+      el.removeAttribute('data-page-node-id');
+      el.removeAttribute('data-dm-ref');
+    });
+    tidy(c);
+    var html = '<!DOCTYPE html>\n' + c.outerHTML;
+    return html.replace(/\n{3,}/g, '\n\n');
+  }
+
+  function download(html){
+    var blob = new Blob([html], {type: 'text/html;charset=utf-8'});
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = thisName().replace(/\.html?$/i, '') + '_' + stamp() + '.html';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function(){ URL.revokeObjectURL(a.href); }, 3000);
+    dirty = false; updateBadge();
+    showToast('已下载新文件，请用它替换原文件');
+  }
+
+  function writeHandle(h, html){
+    return h.createWritable().then(function(w){
+      return w.write(html).then(function(){ return w.close(); });
+    }).then(function(){
+      dirty = false; updateBadge();
+      showToast('已原地保存到：' + h.name);
+    }).catch(function(err){
+      if(err && err.name === 'AbortError') return;
+      showToast('写入失败，已改为下载');
+      download(html);
+    });
+  }
+
+  function save(){
+    var html = buildHtml();
+    if(window.showSaveFilePicker){
+      if(fileHandle){ writeHandle(fileHandle, html); return; }
+      window.showSaveFilePicker({
+        suggestedName: thisName(),
+        types: [{description: 'HTML', accept: {'text/html': ['.html']}}]
+      }).then(function(h){
+        fileHandle = h;
+        return writeHandle(h, html);
+      }).catch(function(err){
+        if(err && err.name === 'AbortError'){ showToast('已取消保存'); return; }
+        download(html);
+      });
+      return;
+    }
+    download(html);
+  }
+
+  var bar = document.createElement('div');
+  bar.id = 'ed-bar';
+  bar.innerHTML =
+    '<div id="ed-row">' +
+    '<button id="bEd">编辑</button>' +
+    '<button id="bAdd">加卡</button>' +
+    '<button id="bUndo" title="Ctrl+Z">撤销</button>' +
+    '<button id="bRedo" title="Ctrl+Y">恢复</button>' +
+    '<span class="sp"></span>' +
+    '<button id="bSave" class="ok">保存</button>' +
+    '<button id="bPrt">打印</button>' +
+    '<button id="bCol">收起</button>' +
+    '</div>';
+  document.body.appendChild(bar);
+
+  /* 收起态：小方块「菜单」（点击展开） */
+  var mini = document.createElement('button');
+  mini.id = 'ed-mini';
+  mini.className = 'drag-handle';
+  mini.title = '展开编辑工具条（可拖动）';
+  mini.textContent = '菜单';
+  bar.appendChild(mini);
+
+  function setBarState(mode){
+    bar.classList.remove('mini');
+    if(mode === 'mini') bar.classList.add('mini');
+  }
+  bar.addEventListener('click', function(e){
+    if(!bar.classList.contains('mini')) return;
+    e.stopPropagation();
+    setBarState('open');
+  });
+
+  var note = document.createElement('div');
+  note.id = 'ed-note';
+  note.innerHTML =
+    '<b id="ed-note-h" style="display:inline-block;">编辑模式</b>' +
+    '<span class="nx" id="ed-note-x" title="关闭">&#10005;</span>' +
+    '<div class="nl">点文字直接改（左侧字段标签已固定）</div>' +
+    '<div class="nl">拖 <b>&#8942;&#8942;</b> 移动卡片：跨列＝换状态，列内＝调优先级</div>' +
+    '<div class="nl">点时间节点圆点改颜色；状态 / 等级列是下拉</div>' +
+    '<div class="fmt"><span class="fh">富文本（选中文字后点）：</span>' +
+    '<button data-cmd="bold" title="加粗 Ctrl+B"><b>B</b></button>' +
+    '<button data-cmd="italic" title="斜体 Ctrl+I"><i>I</i></button>' +
+    '<button data-cmd="underline" title="下划线 Ctrl+U"><u>U</u></button>' +
+    '<button data-cmd="removeFormat" title="清除所选格式">清格式</button></div>' +
+    '<div class="nl"><b>Ctrl+Z</b> 撤销　<b>Ctrl+Y</b> 恢复　<b>Ctrl+S</b> 保存</div>' +
+    '<div class="nl" style="margin-top:5px;padding-top:5px;border-top:1px dashed #fcd34d;">' +
+    '改完点 <b>保存</b> 才写入文件；<b>打印</b> ＝ 导出高清图片<br>浏览模式只能展开 / 收起，改动需先点编辑</div>';
+  document.body.appendChild(note);
+
+  makeDrag(document.getElementById('ed-bar'),    document.getElementById('ed-bar'));
+  makeDrag(document.getElementById('ed-note-h'), document.getElementById('ed-note'));
+  Array.prototype.slice.call(document.querySelectorAll('#ed-note .fmt button')).forEach(function(b){
+    b.addEventListener('mousedown', function(e){
+      e.preventDefault();
+      document.execCommand(b.getAttribute('data-cmd'), false, null);
+      markDirty();
+    });
+  });
+
+  document.getElementById('bEd').onclick = function(){
+    if(editing && dirty){
+      if(confirm('修改尚未保存到文件。\n\n确定 ＝ 现在保存编辑\n取消 ＝ 仅退出编辑（按钮会留红圈提醒）')){
+        save(); return;
+      }
+    }
+    setEdit(!editing);
+  };
+  document.getElementById('bAdd').onclick  = addItem;
+  document.getElementById('bUndo').onclick = undo;
+  document.getElementById('bRedo').onclick = redo;
+  document.getElementById('bSave').onclick = save;
+  document.getElementById('bPrt').onclick  = exportPng;
+  document.getElementById('bCol').onclick  = function(e){ e.stopPropagation(); setBarState('mini'); };
+  document.getElementById('ed-note-x').onclick = function(){
+    var n = document.getElementById('ed-note');
+    if(n){ n.dataset.closed = '1'; n.classList.remove('show'); }
+  };
+  document.addEventListener('keydown', function(e){
+    var k = e.key ? e.key.toLowerCase() : '';
+    if(e.ctrlKey || e.metaKey){
+      if(k === 's' || (e.keyCode || e.which) === 83){ e.preventDefault(); save(); return; }
+      if(k === 'z' && !e.shiftKey){ e.preventDefault(); undo(); return; }
+      if(k === 'y' || (k === 'z' && e.shiftKey)){ e.preventDefault(); redo(); return; }
+    }
+  });
+
+  wireDate();
+  window.addEventListener('beforeunload', function(e){
+    if(dirty){ e.preventDefault(); e.returnValue = ''; }
+  });
+
+  bindX(); syncCounts(); syncDays(); updateBadge();
+  initTl(); initDnD(); initRowDnd(); initCollapse(); initKbTools(); buildCal(); wireCal(); hideNote();
+})();
+</script>
+
+</body></html>
