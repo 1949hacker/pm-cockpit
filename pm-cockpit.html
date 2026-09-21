@@ -159,6 +159,35 @@
     line-height:1;cursor:pointer;display:none;padding:0;}
   body.editing .card-x{display:block;}
   body.editing .card{padding-right:30px;}
+  /* ---------- 清单行 工具按钮（删除 / 判定，仅编辑态）---------- */
+  .drag-col{display:flex;align-items:center;justify-content:center;}
+  .row-x, .row-judge{
+    display:none; box-sizing:border-box; width:18px; height:18px; border-radius:5px;
+    font-size:11px; font-weight:700; line-height:1; padding:0; cursor:pointer;
+    border:1px solid #fecaca; background:#fff; color:#b91c1c;
+  }
+  .row-judge{border-color:#bfdbfe; color:#1d4ed8;}
+  .row-x:hover{background:#fee2e2;}
+  .row-judge:hover{background:#eff6ff;}
+  body.editing .drag-col{flex-direction:column; gap:3px; padding:6px 2px !important;}
+  body.editing .row-x, body.editing .row-judge{display:inline-flex; align-items:center; justify-content:center;}
+
+  /* ---------- 拖拽浮层 / 方向步进按钮 / 行折叠 ---------- */
+  .grip, .tgrip{touch-action:none;}
+  .card-nav{position:absolute;top:6px;right:30px;display:none;gap:2px;z-index:5;}
+  body.editing .card-nav{display:inline-flex;}
+  .row-nav{display:none;flex-direction:column;gap:1px;margin-top:2px;}
+  body.editing .row-nav{display:inline-flex;}
+  .navbtn{width:17px;height:17px;border-radius:4px;border:1px solid #cbd5e1;background:#fff;color:#475569;
+    font-size:11px;font-weight:700;line-height:1;padding:0;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;}
+  .navbtn:hover{background:#eff6ff;border-color:#2563eb;color:#1d4ed8;}
+  .navbtn:active{transform:scale(.92);}
+  .kb-ghost{position:fixed;z-index:9999;pointer-events:none;opacity:.92;box-shadow:0 12px 30px rgba(15,23,42,.3);border-radius:10px;}
+  .row-ghost{position:fixed;z-index:9999;pointer-events:none;opacity:.92;box-shadow:0 12px 30px rgba(15,23,42,.3);}
+  .row-ghost td{border:none !important;}
+  @media print{ .card-nav,.row-nav,.navbtn,.kb-ghost,.row-ghost{display:none !important;} }
+  @media (max-width:768px){ .card-nav{right:28px;} }
+
   /* ---------- TIMELINE ---------- */
   .tl-line { position:relative; display:flex; justify-content:space-between; gap:8px; }
   .tl-line::before { content:''; position:absolute; left:0; right:0; top:9px; height:2px; background:#e5e7eb; z-index:0; }
@@ -194,7 +223,7 @@
   body.editing [contenteditable="true"]{outline:1px dashed #cbd5e1;outline-offset:2px;border-radius:4px;}
   body.editing [contenteditable="true"]:hover{outline-color:#2563eb;background:#f8fafc;}
   body.editing [contenteditable="true"]:focus{outline:2px solid #2563eb;background:#fff;}
-  @media print{ #ed-bar,#ed-note,#ed-toast,.card-x{display:none !important;} }
+  @media print{ #ed-bar,#ed-note,#ed-toast,.card-x,.row-x,.row-judge{display:none !important;}.tl-tools{display:none !important;} }
   @media (max-width:1100px) { .kb { grid-template-columns:repeat(2,1fr); } }
   @media (max-width:640px) {
     body { padding:16px 12px 40px; }
@@ -288,6 +317,17 @@
   #tl-pal .sw:hover{transform:scale(1.14);}
   @media print{ .grip{display:none !important;} #tl-pal{display:none !important;} }
 
+  /* ---------- 时间节点增删 / 隐藏拖拽柄 ---------- */
+  .tl-tools{position:absolute;top:-4px;right:0;display:none;gap:3px;z-index:6;}
+  body.editing .tl-tools{display:flex;}
+  .tl-tools button{width:18px;height:18px;padding:0;line-height:1;border-radius:50%;border:1px solid #cbd5e1;
+    background:#fff;color:#475569;font-size:11px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+  .tl-tools .tl-add:hover{border-color:#16a34a;color:#16a34a;background:#f0fdf4;}
+  .tl-tools .tl-del:hover{border-color:#dc2626;color:#dc2626;background:#fef2f2;}
+  .tl-tools button[disabled]{opacity:.35;cursor:not-allowed;}
+  /* 拖拽已移除，隐藏拖拽柄 */
+  .grip,.tgrip{display:none !important;}
+  @media print{ .tl-tools{display:none !important;} }
   /* ---------- 卡片默认折叠（点击展开） ---------- */
   .card:not(.open) > .row:not(.keep){display:none;}
   body:not(.editing) .card{cursor:pointer;}
@@ -1129,6 +1169,57 @@
     });
   }
 
+  /* ---------- 清单行：删除 / 判定（仿卡片，仅编辑态）---------- */
+  function bindRowTools(){
+    Array.prototype.slice.call(document.querySelectorAll('tbody tr')).forEach(function(tr){
+      if(tr.dataset.rtool) return;
+      tr.dataset.rtool = '1';
+      var dc = tr.querySelector('td.drag-col');
+      if(!dc) return;
+      var opt = tr.querySelector('td.opt');
+      if(opt){
+        var jb = document.createElement('button');
+        jb.type = 'button';
+        jb.className = 'row-judge';
+        var jlab = opt.classList.contains('ex') ? '进行中/受阻/待启动/已完成/待决策'
+                 : opt.classList.contains('st') ? '待批/待决策/待确认/条件触发'
+                 : '高/中/低/无';
+        jb.title = '判定状态：点击循环切换（' + jlab + '）';
+        jb.textContent = '\u5224';
+        jb.addEventListener('click', function(e){
+          e.stopPropagation(); e.preventDefault();
+          if(!editing) return;
+          pushUndo();
+          var o = optsOf(opt);
+          var cur = opt.getAttribute('data-v') || o[0][0];
+          var idx = 0;
+          for(var i=0;i<o.length;i++){ if(o[i][0] === cur) idx = i; }
+          var nx = o[(idx + 1) % o.length][0];
+          opt.setAttribute('data-v', nx);
+          var sl = opt.querySelector('select');
+          if(sl) sl.value = nx;
+          markDirty();
+        });
+        dc.appendChild(jb);
+      }
+      var xb = document.createElement('button');
+      xb.type = 'button';
+      xb.className = 'row-x';
+      xb.title = '\u5220\u9664\u8fd9\u4e00\u884c\uff08\u53ef\u64a4\u9500\uff09';
+      xb.textContent = '\u2715';
+      xb.addEventListener('click', function(e){
+        e.stopPropagation(); e.preventDefault();
+        if(!editing) return;
+        if(confirm('\u5220\u9664\u8fd9\u4e00\u884c\uff1f\u6b64\u64cd\u4f5c\u53ef\u7528\u300c\u64a4\u9500\u300d\u6062\u590d')){
+          pushUndo();
+          if(tr.parentNode) tr.parentNode.removeChild(tr);
+          markDirty();
+        }
+      });
+      dc.appendChild(xb);
+    });
+  }
+
   function setEdit(on){
     if(on && !editing) pushUndo();
     editing = on;
@@ -1224,8 +1315,8 @@
     }
     pushUndo();
     lastCtx.node.parentNode.insertBefore(n, lastCtx.node.nextSibling);
-    n.removeAttribute('data-dnd'); initDnD();
     n.removeAttribute('data-tg'); initCollapse();
+    if(n.classList.contains('card')) bindCardNav(n); else if(n.tagName === 'TR') bindRowNav(n);
     setEdit(true); markDirty();
   }
 
@@ -1260,7 +1351,9 @@
   function hidePal(){ var p=document.getElementById('tl-pal'); if(p) p.classList.remove('show'); tlTarget=null; }
   function initTl(){
     var TLMAP = {done:'g', now:'b', next:'y', far:'n', hard:'r'};
-    var pal = document.createElement('div'); pal.id='tl-pal';
+    var pal = document.getElementById('tl-pal');
+    if(!pal){ pal = document.createElement('div'); pal.id='tl-pal'; }
+    pal.innerHTML = '';
     ['g','b','y','r','n','p'].forEach(function(c){
       var s=document.createElement('span'); s.className='sw'; s.dataset.c=c; s.title=TLNAME[c];
       s.style.background=TLCOL[c];
@@ -1273,8 +1366,12 @@
     document.body.appendChild(pal);
     document.querySelectorAll('.tl-node').forEach(function(node){
       var dot = node.querySelector('.tl-dot'); if(!dot) return;
-      for(var k in TLMAP){ if(node.classList.contains(k)){ dot.setAttribute('data-c', TLMAP[k]); break; } }
+      if(!dot.getAttribute('data-c')){
+        for(var k in TLMAP){ if(node.classList.contains(k)){ dot.setAttribute('data-c', TLMAP[k]); break; } }
+      }
       if(!dot.getAttribute('data-c')) dot.setAttribute('data-c','n');
+      if(dot.dataset.tlwire) return;
+      dot.dataset.tlwire = '1';
       dot.addEventListener('click', function(e){
         if(!editing) return;
         e.stopPropagation();
@@ -1285,67 +1382,12 @@
         pal.classList.add('show');
       });
     });
-    document.addEventListener('click', function(e){
-      if(tlTarget && !e.target.closest('#tl-pal') && !e.target.closest('.tl-dot')) hidePal();
-    });
-  }
-
-  /* ---------- 卡片拖拽（跨列 / 排序） ---------- */
-  function getPh(){ var p=document.querySelector('.kb-ph'); if(!p){ p=document.createElement('div'); p.className='kb-ph'; } return p; }
-  function clearPh(){ var p=document.querySelector('.kb-ph'); if(p && p.parentNode) p.parentNode.removeChild(p); }
-  function getCardAfter(col, y){
-    var cards = Array.prototype.slice.call(col.querySelectorAll('.card:not(.dragging)'));
-    var closest = {dist: -Infinity, el: null};
-    cards.forEach(function(c){
-      var box = c.getBoundingClientRect();
-      var off = y - box.top - box.height/2;
-      if(off < 0 && off > closest.dist){ closest = {dist: off, el: c}; }
-    });
-    return closest.el;
-  }
-  function initDnD(){
-    document.querySelectorAll('.card').forEach(function(card){
-      if(card.dataset.dnd) return;
-      card.dataset.dnd = '1';
-      var grip = card.querySelector('.grip');
-      if(grip){
-        var on = function(){ if(!editing) return; card.setAttribute('draggable','true'); };
-        grip.addEventListener('pointerdown', on);
-        grip.addEventListener('touchstart', on, {passive:true});
-      }
-      card.addEventListener('dragstart', function(e){
-        dragCard = card;
-        e.dataTransfer.effectAllowed = 'move';
-        try{ e.dataTransfer.setData('text/plain',''); }catch(_){}
-        setTimeout(function(){ card.classList.add('dragging'); }, 0);
+    if(!initTl._doc){
+      initTl._doc = 1;
+      document.addEventListener('click', function(e){
+        if(tlTarget && !e.target.closest('#tl-pal') && !e.target.closest('.tl-dot')) hidePal();
       });
-      card.addEventListener('dragend', function(){
-        card.setAttribute('draggable','false');
-        card.classList.remove('dragging');
-        dragCard = null; clearPh();
-      });
-    });
-    document.querySelectorAll('.col').forEach(function(col){
-      if(col.dataset.dndc) return;
-      col.dataset.dndc = '1';
-      col.addEventListener('dragover', function(e){
-        if(!dragCard) return;
-        e.preventDefault();
-        var ph = getPh();
-        var after = getCardAfter(col, e.clientY);
-        if(after == null) col.appendChild(ph); else col.insertBefore(ph, after);
-      });
-      col.addEventListener('drop', function(e){
-        if(!editing || !dragCard) return;
-        e.preventDefault();
-        var ph = col.querySelector('.kb-ph');
-        var ref = ph ? ph.nextSibling : null;
-        clearPh();
-        pushUndo();
-        if(ref) col.insertBefore(dragCard, ref); else col.appendChild(dragCard);
-        syncCounts(); markDirty();
-      });
-    });
+    }
   }
 
   /* ---------- 卡片折叠 / 展开 ---------- */
@@ -1374,12 +1416,123 @@
         card.dataset.tg = '1';
         card.addEventListener('click', function(e){
           if(editing) return;
-          if(e.target.closest('.card-x') || e.target.closest('.grip')) return;
+          if(e.target.closest('.card-x') || e.target.closest('.grip') || e.target.closest('.card-nav')) return;
           card.classList.toggle('open');
           syncKbBtn();
         });
       }
     });
+  }
+
+  function bindCardNav(card){
+    var ct = card.querySelector('.ct'); if(!ct) return;
+    var old = ct.querySelector('.card-nav'); if(old && old.parentNode) old.parentNode.removeChild(old);
+    var nav = document.createElement('span'); nav.className = 'card-nav';
+    [['up','↑','上移'],['down','↓','下移'],['left','←','左移（换列）'],['right','→','右移（换列）']].forEach(function(d){
+      var b = document.createElement('button'); b.type='button'; b.className='navbtn nav-'+d[0]; b.textContent=d[1]; b.title=d[2];
+      b.addEventListener('click', function(e){ e.stopPropagation(); e.preventDefault(); if(!editing) return; moveCard(card, d[0]); });
+      nav.appendChild(b);
+    });
+    ct.appendChild(nav);
+  }
+  function siblingCard(card, dir){
+    var n = dir==='up' ? card.previousElementSibling : card.nextElementSibling;
+    while(n && !n.classList.contains('card')) n = dir==='up' ? n.previousElementSibling : n.nextElementSibling;
+    return n;
+  }
+  function moveCard(card, dir){
+    var col = card.parentNode;
+    if(dir==='up' || dir==='down'){
+      var s = siblingCard(card, dir);
+      if(!s) return;
+      pushUndo();
+      if(dir==='up') col.insertBefore(card, s); else col.insertBefore(s, card);
+      syncCounts(); markDirty();
+    } else {
+      var cols = Array.prototype.slice.call(document.querySelectorAll('.kb > .col'));
+      var idx = cols.indexOf(col);
+      var ni = dir==='left' ? idx-1 : idx+1;
+      if(ni < 0 || ni >= cols.length) return;
+      pushUndo(); cols[ni].appendChild(card); syncCounts(); markDirty();
+    }
+  }
+  function bindRowNav(tr){
+    var dc = tr.querySelector('td.drag-col'); if(!dc) return;
+    var old = dc.querySelector('.row-nav'); if(old && old.parentNode) old.parentNode.removeChild(old);
+    var nav = document.createElement('span'); nav.className = 'row-nav';
+    [['up','↑','上移'],['down','↓','下移']].forEach(function(d){
+      var b = document.createElement('button'); b.type='button'; b.className='navbtn nav-'+d[0]; b.textContent=d[1]; b.title=d[2];
+      b.addEventListener('click', function(e){ e.stopPropagation(); e.preventDefault(); if(!editing) return; moveRow(tr, d[0]); });
+      nav.appendChild(b);
+    });
+    dc.appendChild(nav);
+  }
+  function moveRow(tr, dir){
+    var tb = tr.parentNode;
+    var n = dir==='up' ? tr.previousElementSibling : tr.nextElementSibling;
+    while(n && n.tagName !== 'TR') n = dir==='up' ? n.previousElementSibling : n.nextElementSibling;
+    if(!n) return;
+    pushUndo();
+    if(dir==='up') tb.insertBefore(tr, n); else tb.insertBefore(n, tr);
+    markDirty();
+  }
+
+  /* ---------- 方向步进按钮统一绑定（拖拽已移除，改用箭头） ---------- */
+  function bindAllNavs(){
+    Array.prototype.slice.call(document.querySelectorAll('.card')).forEach(function(c){ bindCardNav(c); });
+    Array.prototype.slice.call(document.querySelectorAll('tbody tr')).forEach(function(t){ bindRowNav(t); });
+  }
+
+  /* ---------- 关键时间节点：新增 / 删除（至少保留 1 个） ---------- */
+  function tlNodes(){ return Array.prototype.slice.call(document.querySelectorAll('.tl-line .tl-node')); }
+  function wireTlNodes(){
+    var line = document.querySelector('.tl-line'); if(!line) return;
+    Array.prototype.slice.call(line.querySelectorAll('.tl-node')).forEach(function(node){
+      if(node.dataset.tltool) return;
+      node.dataset.tltool = '1';
+      var box = document.createElement('div');
+      box.className = 'tl-tools';
+      var add = document.createElement('button');
+      add.type = 'button'; add.className = 'tl-add'; add.textContent = '+';
+      add.title = '在此节点后新增一个时间节点';
+      add.onclick = function(e){ e.stopPropagation(); addTlNode(node); };
+      var del = document.createElement('button');
+      del.type = 'button'; del.className = 'tl-del'; del.textContent = '\u2715';
+      del.title = '删除这个时间节点';
+      del.onclick = function(e){ e.stopPropagation(); delTlNode(node); };
+      box.appendChild(add); box.appendChild(del);
+      node.appendChild(box);
+    });
+    syncTlTools();
+  }
+  function syncTlTools(){
+    var ns = tlNodes(), only = ns.length <= 1;
+    ns.forEach(function(n){
+      var d = n.querySelector('.tl-del');
+      if(d){ d.disabled = only; d.title = only ? '至少保留 1 个时间节点，无法删除' : '删除这个时间节点'; }
+    });
+  }
+  function addTlNode(after){
+    var line = document.querySelector('.tl-line'); if(!line) return;
+    pushUndo();
+    var n = document.createElement('div');
+    n.className = 'tl-node';
+    n.innerHTML = '<div class="tl-dot" data-c="n"></div><div class="tl-date">新节点</div><div class="tl-txt">待补充说明</div>';
+    if(after && after.parentNode === line && after.nextSibling) line.insertBefore(n, after.nextSibling);
+    else line.appendChild(n);
+    markDirty();
+    initTl(); wireTlNodes();
+    if(editing) setEdit(true);
+    showToast('已新增时间节点');
+  }
+  function delTlNode(node){
+    if(tlNodes().length <= 1){ showToast('至少要保留 1 个时间节点'); return; }
+    if(!confirm('删除这个时间节点？')) return;
+    pushUndo();
+    if(node.parentNode) node.parentNode.removeChild(node);
+    markDirty();
+    initTl(); wireTlNodes();
+    showToast('已删除时间节点');
   }
 
   /* ---------- 撤销 / 恢复 ---------- */
@@ -1402,8 +1555,8 @@
     Array.prototype.slice.call(document.querySelectorAll('tbody')).forEach(function(t){
       t.removeAttribute('data-trb');
     });
-    clearPh(); clearRowPh();
-    bindX(); initDnD(); initRowDnd(); initCollapse(); initKbTools(); wireDate(); wireCal(); buildCal(); syncCounts(); syncDays();
+    clearRowPh();
+    bindX(); bindAllNavs(); initCollapse(); initKbTools(); bindRowTools(); wireDate(); wireCal(); buildCal(); syncCounts(); syncDays();
     lastCtx = null;
   }
   function restore(h){
@@ -1471,6 +1624,10 @@
       if(dinp) el.setAttribute('data-d', dinp.value);
       dueBadge(el);
     });
+    Array.prototype.slice.call(c.querySelectorAll('.row-x, .row-judge, .tl-add, .tl-del')).forEach(function(el){ if(el.parentNode) el.parentNode.removeChild(el); });
+    Array.prototype.slice.call(c.querySelectorAll('.card-nav, .row-nav')).forEach(function(el){ if(el.parentNode) el.parentNode.removeChild(el); });
+    Array.prototype.slice.call(c.querySelectorAll('tbody tr')).forEach(function(tr){ Array.prototype.slice.call(tr.children).forEach(function(td){ td.style.display=''; td.removeAttribute('colspan'); }); });
+    Array.prototype.slice.call(c.querySelectorAll('tbody tr')).forEach(function(el){ el.removeAttribute('data-rtool'); });
     Array.prototype.slice.call(c.querySelectorAll('*')).forEach(function(el){
       el.removeAttribute('data-page-node-id'); el.removeAttribute('data-dm-ref');
     });
@@ -1478,7 +1635,7 @@
     var hd = c.querySelector('head');
     if(hd && c.ownerDocument){
       var stEl = c.ownerDocument.createElement('style');
-      stEl.textContent = '.grip{display:none !important;}.ct::after{content:"" !important;}.card-x{display:none !important;}.drag-col{display:none !important;}.tgrip{display:none !important;}';
+      stEl.textContent = '.grip{display:none !important;}.ct::after{content:"" !important;}.card-x{display:none !important;}.drag-col{display:none !important;}.tgrip{display:none !important;}.row-x{display:none !important;}.row-judge{display:none !important;}.tl-tools{display:none !important;}';
       hd.appendChild(stEl);
     }
     return c;
@@ -1679,51 +1836,6 @@
     });
     return closest.el;
   }
-  function initRowDnd(){
-    Array.prototype.slice.call(document.querySelectorAll('tbody tr')).forEach(function(tr){
-      if(tr.dataset.rrow) return;
-      tr.dataset.rrow = '1';
-      var grip = tr.querySelector('.tgrip');
-      if(grip){
-        var on = function(){ if(!editing) return; tr.setAttribute('draggable','true'); };
-        grip.addEventListener('pointerdown', on);
-        grip.addEventListener('touchstart', on, {passive:true});
-      }
-      tr.addEventListener('dragstart', function(e){
-        dragRow = tr;
-        e.dataTransfer.effectAllowed = 'move';
-        try{ e.dataTransfer.setData('text/plain',''); }catch(_){}
-        setTimeout(function(){ tr.classList.add('row-dragging'); }, 0);
-      });
-      tr.addEventListener('dragend', function(){
-        tr.setAttribute('draggable','false');
-        tr.classList.remove('row-dragging');
-        dragRow = null; clearRowPh();
-      });
-    });
-    Array.prototype.slice.call(document.querySelectorAll('tbody')).forEach(function(tb){
-      if(tb.dataset.trb) return;
-      tb.dataset.trb = '1';
-      tb.addEventListener('dragover', function(e){
-        if(!dragRow) return;
-        e.preventDefault();
-        var ph = getRowPh(tb);
-        var after = getTrAfter(tb, e.clientY);
-        if(after == null) tb.appendChild(ph); else tb.insertBefore(ph, after);
-      });
-      tb.addEventListener('drop', function(e){
-        if(!editing || !dragRow) return;
-        e.preventDefault();
-        var ph = tb.querySelector('.row-ph');
-        var ref = ph ? ph.nextSibling : null;
-        clearRowPh();
-        pushUndo();
-        if(ref) tb.insertBefore(dragRow, ref); else tb.appendChild(dragRow);
-        markDirty();
-      });
-    });
-  }
-
   function stamp(){
     var d = new Date(), z = function(v){ return (v < 10 ? '0' : '') + v; };
     return d.getFullYear() + z(d.getMonth() + 1) + z(d.getDate()) + '_' + z(d.getHours()) + z(d.getMinutes());
@@ -1773,6 +1885,10 @@
       if(dinp) el.setAttribute('data-d', dinp.value);
       dueBadge(el);
     });
+    Array.prototype.slice.call(c.querySelectorAll('.row-x, .row-judge, .tl-add, .tl-del')).forEach(function(el){ if(el.parentNode) el.parentNode.removeChild(el); });
+    Array.prototype.slice.call(c.querySelectorAll('.card-nav, .row-nav')).forEach(function(el){ if(el.parentNode) el.parentNode.removeChild(el); });
+    Array.prototype.slice.call(c.querySelectorAll('tbody tr')).forEach(function(tr){ Array.prototype.slice.call(tr.children).forEach(function(td){ td.style.display=''; td.removeAttribute('colspan'); }); });
+    Array.prototype.slice.call(c.querySelectorAll('tbody tr')).forEach(function(el){ el.removeAttribute('data-rtool'); });
     Array.prototype.slice.call(c.querySelectorAll('*')).forEach(function(el){
       el.removeAttribute('data-page-node-id');
       el.removeAttribute('data-dm-ref');
@@ -1864,7 +1980,7 @@
     '<b id="ed-note-h" style="display:inline-block;">编辑模式</b>' +
     '<span class="nx" id="ed-note-x" title="关闭">&#10005;</span>' +
     '<div class="nl">点文字直接改（左侧字段标签已固定）</div>' +
-    '<div class="nl">拖 <b>&#8942;&#8942;</b> 移动卡片：跨列＝换状态，列内＝调优先级</div>' +
+    '<div class="nl">点卡片右上 / 行首的 <b>↑↓←→</b> 箭头调整顺序：↑↓ 调优先级，←→ 换列</div>' +
     '<div class="nl">点时间节点圆点改颜色；状态 / 等级列是下拉</div>' +
     '<div class="fmt"><span class="fh">富文本（选中文字后点）：</span>' +
     '<button data-cmd="bold" title="加粗 Ctrl+B"><b>B</b></button>' +
@@ -1918,8 +2034,8 @@
     if(dirty){ e.preventDefault(); e.returnValue = ''; }
   });
 
-  bindX(); syncCounts(); syncDays(); updateBadge();
-  initTl(); initDnD(); initRowDnd(); initCollapse(); initKbTools(); buildCal(); wireCal(); hideNote();
+  bindX(); bindAllNavs(); syncCounts(); syncDays(); updateBadge();
+  initTl(); wireTlNodes(); initCollapse(); initKbTools(); bindRowTools(); buildCal(); wireCal(); hideNote();
 })();
 </script>
 
