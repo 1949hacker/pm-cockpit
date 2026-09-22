@@ -189,20 +189,6 @@
   @media (max-width:768px){ .card-nav{right:28px;} }
 
   /* ---------- TIMELINE ---------- */
-  .tl-line { position:relative; display:flex; justify-content:space-between; gap:8px; }
-  .tl-line::before { content:''; position:absolute; left:0; right:0; top:9px; height:2px; background:#e5e7eb; z-index:0; }
-  .tl-node { position:relative; z-index:1; flex:1; min-width:0; text-align:center; }
-  .tl-dot { width:19px; height:19px; border-radius:50%; margin:0 auto 9px; border:3px solid #fff; box-shadow:0 0 0 1.5px #d1d5db; }
-  .tl-node.done .tl-dot { background:#16a34a; box-shadow:0 0 0 1.5px #16a34a; }
-  .tl-node.now  .tl-dot { background:#2563eb; box-shadow:0 0 0 1.5px #2563eb; }
-  .tl-node.next .tl-dot { background:#d97706; box-shadow:0 0 0 1.5px #d97706; }
-  .tl-node.far  .tl-dot { background:#9ca3af; box-shadow:0 0 0 1.5px #9ca3af; }
-  .tl-node.hard .tl-dot { background:#dc2626; box-shadow:0 0 0 1.5px #dc2626; }
-  .tl-date { font-size:11.5px; font-weight:700; color:#374151; }
-  .tl-node.now .tl-date { color:#1d4ed8; }
-  .tl-node.hard .tl-date { color:#b91c1c; }
-  .tl-txt { font-size:11px; color:#6b7280; margin-top:2px; padding:0 4px; }
-  .tl-node.hard .tl-txt { color:#b91c1c; font-weight:600; }
 
   .foot { margin-top:20px; text-align:center; font-size:11.5px; color:#9ca3af; }
   .foot a { color:#6b7280; text-decoration:none; border-bottom:1px dashed #cbd5e1; }
@@ -223,16 +209,12 @@
   body.editing [contenteditable="true"]{outline:1px dashed #cbd5e1;outline-offset:2px;border-radius:4px;}
   body.editing [contenteditable="true"]:hover{outline-color:#2563eb;background:#f8fafc;}
   body.editing [contenteditable="true"]:focus{outline:2px solid #2563eb;background:#fff;}
-  @media print{ #ed-bar,#ed-note,#ed-toast,.card-x,.row-x,.row-judge{display:none !important;}.tl-tools{display:none !important;} }
+  @media print{ #ed-bar,#ed-note,#ed-toast,.card-x,.row-x,.row-judge{display:none !important;} }
   @media (max-width:1100px) { .kb { grid-template-columns:repeat(2,1fr); } }
   @media (max-width:640px) {
     body { padding:16px 12px 40px; }
     .kb { grid-template-columns:1fr; }
     .head { flex-direction:column; }
-    .tl-line { flex-direction:column; gap:14px; }
-    .tl-line::before { display:none; }
-    .tl-node { display:flex; text-align:left; gap:11px; align-items:flex-start; }
-    .tl-dot { margin:4px 0 0; flex:0 0 19px; }
   }
 
   @page { size: A4 landscape; margin: 6mm; }
@@ -284,16 +266,12 @@
     th { padding:6px 10px; font-size:9px; }
     td { padding:6px 10px; font-size:9.5px; }
     .pill { font-size:8.5px; padding:1.5px 6px; }
-    .tl-dot { width:13px; height:13px; margin-bottom:5px; }
-    .tl-line::before { top:6px; }
-    .tl-date { font-size:9.5px; }
-    .tl-txt { font-size:8.5px; }
     .foot { margin-top:7px; font-size:8.5px; }
     .pg-break { page-break-after: always; }
     tr { page-break-inside:avoid; }
   }
 
-  /* ---------- 增强：标签固定 / 卡片拖拽 / 时间节点配色 ---------- */
+  /* ---------- 增强：标签固定 ---------- */
   .lvdot.n{background:#9ca3af;}
   .grip{display:inline-block;cursor:grab;color:#cbd5e1;font-size:15px;line-height:1;margin-right:6px;user-select:none;-webkit-user-select:none;vertical-align:1px;}
   .grip:active{cursor:grabbing;}
@@ -304,30 +282,11 @@
   .col.c4 .card{border-left-color:#dc2626;}
   .kb-ph{height:14px;background:#cbd5e1;border:1px dashed #94a3b8;border-radius:8px;margin-bottom:10px;opacity:.75;}
   .card.dragging{opacity:.45;}
-  .tl-dot[data-c="g"]{background:#16a34a;box-shadow:0 0 0 1.5px #16a34a;}
-  .tl-dot[data-c="b"]{background:#2563eb;box-shadow:0 0 0 1.5px #2563eb;}
-  .tl-dot[data-c="y"]{background:#d97706;box-shadow:0 0 0 1.5px #d97706;}
-  .tl-dot[data-c="r"]{background:#dc2626;box-shadow:0 0 0 1.5px #dc2626;}
-  .tl-dot[data-c="n"]{background:#9ca3af;box-shadow:0 0 0 1.5px #9ca3af;}
-  .tl-dot[data-c="p"]{background:#7c3aed;box-shadow:0 0 0 1.5px #7c3aed;}
-  .tl-dot{cursor:pointer;}
-  #tl-pal{position:fixed;z-index:10001;display:none;background:#fff;border:1px solid #cbd5e1;border-radius:12px;padding:8px;gap:7px;box-shadow:0 10px 30px rgba(15,23,42,.28);}
-  #tl-pal.show{display:flex;}
-  #tl-pal .sw{width:24px;height:24px;border-radius:50%;cursor:pointer;border:2px solid #fff;box-shadow:0 0 0 1px #e5e7eb;transition:transform .1s;}
-  #tl-pal .sw:hover{transform:scale(1.14);}
-  @media print{ .grip{display:none !important;} #tl-pal{display:none !important;} }
+  @media print{ .grip{display:none !important;} }
 
-  /* ---------- 时间节点增删 / 隐藏拖拽柄 ---------- */
-  .tl-tools{position:absolute;top:-4px;right:0;display:none;gap:3px;z-index:6;}
-  body.editing .tl-tools{display:flex;}
-  .tl-tools button{width:18px;height:18px;padding:0;line-height:1;border-radius:50%;border:1px solid #cbd5e1;
-    background:#fff;color:#475569;font-size:11px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;}
-  .tl-tools .tl-add:hover{border-color:#16a34a;color:#16a34a;background:#f0fdf4;}
-  .tl-tools .tl-del:hover{border-color:#dc2626;color:#dc2626;background:#fef2f2;}
-  .tl-tools button[disabled]{opacity:.35;cursor:not-allowed;}
+  /* ---------- 隐藏拖拽柄 ---------- */
   /* 拖拽已移除，隐藏拖拽柄 */
   .grip,.tgrip{display:none !important;}
-  @media print{ .tl-tools{display:none !important;} }
   /* ---------- 卡片默认折叠（点击展开） ---------- */
   .card:not(.open) > .row:not(.keep){display:none;}
   body:not(.editing) .card{cursor:pointer;}
@@ -984,43 +943,7 @@
         </tbody>
       </table>
 
-      <div class="sub-h sec">
-        <div class="bar"></div><h3>关键时间节点</h3>
-        <span class="hint">红色为硬截止</span>
-      </div>
-      <div class="tl-line">
-        <div class="tl-node done">
-          <div class="tl-dot" data-c="g"></div>
-          <div class="tl-date">示例–示例</div>
-          <div class="tl-txt">方案定稿并移交商务侧</div>
-        </div>
-        <div class="tl-node now">
-          <div class="tl-dot" data-c="b"></div>
-          <div class="tl-date">示例 今日</div>
-          <div class="tl-txt">已提交驻地资源（示例） + 集体出行（示例）往来（示例）需求</div>
-        </div>
-        <div class="tl-node next">
-          <div class="tl-dot" data-c="y"></div>
-          <div class="tl-date">示例 周一</div>
-          <div class="tl-txt">预计中介回复</div>
-        </div>
-        <div class="tl-node next">
-          <div class="tl-dot" data-c="y"></div>
-          <div class="tl-date">示例 前</div>
-          <div class="tl-txt">往来（示例）方案选型完成</div>
-        </div>
-        <div class="tl-node hard">
-          <div class="tl-dot" data-c="r"></div>
-          <div class="tl-date">示例</div>
-          <div class="tl-txt">首批人员到岗（示例）</div>
-        </div>
-        <div class="tl-node far">
-          <div class="tl-dot" data-c="n"></div>
-          <div class="tl-date">示例</div>
-          <div class="tl-txt">本人 方案类型A（示例） 到期<br>需转示例区域（示例） 方案类型B（示例）</div>
-        </div>
-      </div>
-
+      
     </div>
   </div>
 
@@ -1033,7 +956,7 @@
   var SEL = '.head-l h1, .head-l .meta span, .guide div, .badge, .status .thr, .kpi .l' +
             ', .cd-name, .onething .t, .onething .d, .onething .why' +
             ', .layer-h .who, .layer-h .note, .sub-h h3, .sub-h .hint, th, td' +
-            ', .card .ct, .card .row .v, .tl-date, .tl-txt, #cal-loc';
+            ', .card .ct, .card .row .v, #cal-loc';
 
   var OPT = {
     lvl: [['r','高'],['y','中'],['b','低'],['g','无']],
@@ -1094,8 +1017,7 @@
   }
 
   var editing = false, dirty = false, lastCtx = null, fileHandle = null;
-  var dragCard = null, dragRow = null, tlTarget = null;
-  var TLCOL = {g:'#16a34a', b:'#2563eb', y:'#d97706', r:'#dc2626', n:'#9ca3af', p:'#7c3aed'};
+  var dragCard = null, dragRow = null;
 
   function all(){ return Array.prototype.slice.call(document.querySelectorAll(SEL)); }
 
@@ -1346,50 +1268,6 @@
     handle.addEventListener('pointercancel', function(){ drag = null; });
   }
 
-  /* ---------- 时间节点颜色可选 ---------- */
-  var TLNAME = {g:'绿·完成/无', b:'蓝·当前/进行', y:'黄·下一步', r:'红·硬截止', n:'灰·远期', p:'紫·备选'};
-  function hidePal(){ var p=document.getElementById('tl-pal'); if(p) p.classList.remove('show'); tlTarget=null; }
-  function initTl(){
-    var TLMAP = {done:'g', now:'b', next:'y', far:'n', hard:'r'};
-    var pal = document.getElementById('tl-pal');
-    if(!pal){ pal = document.createElement('div'); pal.id='tl-pal'; }
-    pal.innerHTML = '';
-    ['g','b','y','r','n','p'].forEach(function(c){
-      var s=document.createElement('span'); s.className='sw'; s.dataset.c=c; s.title=TLNAME[c];
-      s.style.background=TLCOL[c];
-      s.addEventListener('click', function(){
-        if(tlTarget){ tlTarget.setAttribute('data-c', c); tlTarget.style.background=''; tlTarget.style.boxShadow=''; markDirty(); }
-        hidePal();
-      });
-      pal.appendChild(s);
-    });
-    document.body.appendChild(pal);
-    document.querySelectorAll('.tl-node').forEach(function(node){
-      var dot = node.querySelector('.tl-dot'); if(!dot) return;
-      if(!dot.getAttribute('data-c')){
-        for(var k in TLMAP){ if(node.classList.contains(k)){ dot.setAttribute('data-c', TLMAP[k]); break; } }
-      }
-      if(!dot.getAttribute('data-c')) dot.setAttribute('data-c','n');
-      if(dot._tlwire) return;
-      dot._tlwire = true;
-      dot.addEventListener('click', function(e){
-        if(!editing) return;
-        e.stopPropagation();
-        tlTarget = dot;
-        var r = dot.getBoundingClientRect();
-        pal.style.left = Math.min(r.left, window.innerWidth-190) + 'px';
-        pal.style.top  = (r.bottom + 6) + 'px';
-        pal.classList.add('show');
-      });
-    });
-    if(!initTl._doc){
-      initTl._doc = 1;
-      document.addEventListener('click', function(e){
-        if(tlTarget && !e.target.closest('#tl-pal') && !e.target.closest('.tl-dot')) hidePal();
-      });
-    }
-  }
-
   /* ---------- 卡片折叠 / 展开 ---------- */
   function expandAll(on){ document.querySelectorAll('.card').forEach(function(c){ c.classList.toggle('open', on); }); syncKbBtn(); }
   function syncKbBtn(){
@@ -1483,58 +1361,6 @@
     Array.prototype.slice.call(document.querySelectorAll('tbody tr')).forEach(function(t){ bindRowNav(t); });
   }
 
-  /* ---------- 关键时间节点：新增 / 删除（至少保留 1 个） ---------- */
-  function tlNodes(){ return Array.prototype.slice.call(document.querySelectorAll('.tl-line .tl-node')); }
-  function wireTlNodes(){
-    var line = document.querySelector('.tl-line'); if(!line) return;
-    Array.prototype.slice.call(line.querySelectorAll('.tl-node')).forEach(function(node){
-      var oldBox = node.querySelector('.tl-tools');
-      if(oldBox && oldBox.parentNode) oldBox.parentNode.removeChild(oldBox);
-      var box = document.createElement('div');
-      box.className = 'tl-tools';
-      var add = document.createElement('button');
-      add.type = 'button'; add.className = 'tl-add'; add.textContent = '+';
-      add.title = '在此节点后新增一个时间节点';
-      add.onclick = function(e){ e.stopPropagation(); addTlNode(node); };
-      var del = document.createElement('button');
-      del.type = 'button'; del.className = 'tl-del'; del.textContent = '\u2715';
-      del.title = '删除这个时间节点';
-      del.onclick = function(e){ e.stopPropagation(); delTlNode(node); };
-      box.appendChild(add); box.appendChild(del);
-      node.appendChild(box);
-    });
-    syncTlTools();
-  }
-  function syncTlTools(){
-    var ns = tlNodes(), only = ns.length <= 1;
-    ns.forEach(function(n){
-      var d = n.querySelector('.tl-del');
-      if(d){ d.disabled = only; d.title = only ? '至少保留 1 个时间节点，无法删除' : '删除这个时间节点'; }
-    });
-  }
-  function addTlNode(after){
-    var line = document.querySelector('.tl-line'); if(!line) return;
-    pushUndo();
-    var n = document.createElement('div');
-    n.className = 'tl-node';
-    n.innerHTML = '<div class="tl-dot" data-c="n"></div><div class="tl-date">新节点</div><div class="tl-txt">待补充说明</div>';
-    if(after && after.parentNode === line && after.nextSibling) line.insertBefore(n, after.nextSibling);
-    else line.appendChild(n);
-    markDirty();
-    initTl(); wireTlNodes();
-    if(editing) setEdit(true);
-    showToast('已新增时间节点');
-  }
-  function delTlNode(node){
-    if(tlNodes().length <= 1){ showToast('至少要保留 1 个时间节点'); return; }
-    if(!confirm('删除这个时间节点？')) return;
-    pushUndo();
-    if(node.parentNode) node.parentNode.removeChild(node);
-    markDirty();
-    initTl(); wireTlNodes();
-    showToast('已删除时间节点');
-  }
-
   /* ---------- 撤销 / 恢复 ---------- */
   var UNDO = [], REDO = [], undoBusy = false, typeSess = false, typeTm = null;
   function snap(){ var w = document.querySelector('.wrap'); return w ? w.innerHTML : ''; }
@@ -1556,7 +1382,7 @@
       t.removeAttribute('data-trb');
     });
     clearRowPh();
-    bindX(); bindAllNavs(); initCollapse(); initTl(); wireTlNodes(); initKbTools(); bindRowTools(); wireDate(); wireCal(); buildCal(); syncCounts(); syncDays();
+    bindX(); bindAllNavs(); initCollapse(); initKbTools(); bindRowTools(); wireDate(); wireCal(); buildCal(); syncCounts(); syncDays();
     lastCtx = null;
   }
   function restore(h){
@@ -1601,7 +1427,7 @@
       sp.textContent = di2.getAttribute('value') || '';
       if(di2.parentNode) di2.parentNode.replaceChild(sp, di2);
     }
-    ['#ed-bar','#ed-note','#ed-toast','#tl-pal','#kb-tools','#__board_editor__'].forEach(function(sel){
+    ['#ed-bar','#ed-note','#ed-toast','#kb-tools','#__board_editor__'].forEach(function(sel){
       var e = c.querySelector(sel); if(e && e.parentNode) e.parentNode.removeChild(e);
     });
     Array.prototype.slice.call(c.querySelectorAll('[contenteditable]'))
@@ -1624,15 +1450,13 @@
       if(dinp) el.setAttribute('data-d', dinp.value);
       dueBadge(el);
     });
-    Array.prototype.slice.call(c.querySelectorAll('.row-x, .row-judge, .tl-add, .tl-del, .tl-tools')).forEach(function(el){ if(el.parentNode) el.parentNode.removeChild(el); });
+    Array.prototype.slice.call(c.querySelectorAll('.row-x, .row-judge')).forEach(function(el){ if(el.parentNode) el.parentNode.removeChild(el); });
     Array.prototype.slice.call(c.querySelectorAll('.card-nav, .row-nav')).forEach(function(el){ if(el.parentNode) el.parentNode.removeChild(el); });
     Array.prototype.slice.call(c.querySelectorAll('tbody tr')).forEach(function(tr){ Array.prototype.slice.call(tr.children).forEach(function(td){ td.style.display=''; td.removeAttribute('colspan'); }); });
     Array.prototype.slice.call(c.querySelectorAll('.card')).forEach(function(el){ el.removeAttribute('data-dnd'); el.removeAttribute('data-tg'); });
     Array.prototype.slice.call(c.querySelectorAll('.col')).forEach(function(el){ el.removeAttribute('data-dndc'); });
     Array.prototype.slice.call(c.querySelectorAll('tbody')).forEach(function(el){ el.removeAttribute('data-trb'); });
     Array.prototype.slice.call(c.querySelectorAll('tbody tr')).forEach(function(el){ el.removeAttribute('data-rtool'); el.removeAttribute('data-rrow'); el.removeAttribute('data-rtg'); el.removeAttribute('data-rclk'); });
-    Array.prototype.slice.call(c.querySelectorAll('.tl-node')).forEach(function(el){ el.removeAttribute('data-tltool'); });
-    Array.prototype.slice.call(c.querySelectorAll('.tl-dot')).forEach(function(el){ el.removeAttribute('data-tlwire'); });
     Array.prototype.slice.call(c.querySelectorAll('*')).forEach(function(el){
       el.removeAttribute('data-page-node-id'); el.removeAttribute('data-dm-ref');
     });
@@ -1640,7 +1464,7 @@
     var hd = c.querySelector('head');
     if(hd && c.ownerDocument){
       var stEl = c.ownerDocument.createElement('style');
-      stEl.textContent = '.grip{display:none !important;}.ct::after{content:"" !important;}.card-x{display:none !important;}.drag-col{display:none !important;}.tgrip{display:none !important;}.row-x{display:none !important;}.row-judge{display:none !important;}.tl-tools{display:none !important;}';
+      stEl.textContent = '.grip{display:none !important;}.ct::after{content:"" !important;}.card-x{display:none !important;}.drag-col{display:none !important;}.tgrip{display:none !important;}.row-x{display:none !important;}.row-judge{display:none !important;}';
       hd.appendChild(stEl);
     }
     return c;
@@ -1868,7 +1692,6 @@
     var b1 = c.querySelector('#ed-bar');  if(b1 && b1.parentNode) b1.parentNode.removeChild(b1);
     var b2 = c.querySelector('#ed-note'); if(b2 && b2.parentNode) b2.parentNode.removeChild(b2);
     var b3 = c.querySelector('#ed-toast');if(b3 && b3.parentNode) b3.parentNode.removeChild(b3);
-    var b4 = c.querySelector('#tl-pal');  if(b4 && b4.parentNode) b4.parentNode.removeChild(b4);
     var b5 = c.querySelector('#kb-tools');if(b5 && b5.parentNode) b5.parentNode.removeChild(b5);
     Array.prototype.slice.call(c.querySelectorAll('[contenteditable]'))
       .forEach(function(el){ el.removeAttribute('contenteditable'); });
@@ -1890,15 +1713,13 @@
       if(dinp) el.setAttribute('data-d', dinp.value);
       dueBadge(el);
     });
-    Array.prototype.slice.call(c.querySelectorAll('.row-x, .row-judge, .tl-add, .tl-del, .tl-tools')).forEach(function(el){ if(el.parentNode) el.parentNode.removeChild(el); });
+    Array.prototype.slice.call(c.querySelectorAll('.row-x, .row-judge')).forEach(function(el){ if(el.parentNode) el.parentNode.removeChild(el); });
     Array.prototype.slice.call(c.querySelectorAll('.card-nav, .row-nav')).forEach(function(el){ if(el.parentNode) el.parentNode.removeChild(el); });
     Array.prototype.slice.call(c.querySelectorAll('tbody tr')).forEach(function(tr){ Array.prototype.slice.call(tr.children).forEach(function(td){ td.style.display=''; td.removeAttribute('colspan'); }); });
     Array.prototype.slice.call(c.querySelectorAll('.card')).forEach(function(el){ el.removeAttribute('data-dnd'); el.removeAttribute('data-tg'); });
     Array.prototype.slice.call(c.querySelectorAll('.col')).forEach(function(el){ el.removeAttribute('data-dndc'); });
     Array.prototype.slice.call(c.querySelectorAll('tbody')).forEach(function(el){ el.removeAttribute('data-trb'); });
     Array.prototype.slice.call(c.querySelectorAll('tbody tr')).forEach(function(el){ el.removeAttribute('data-rtool'); el.removeAttribute('data-rrow'); el.removeAttribute('data-rtg'); el.removeAttribute('data-rclk'); });
-    Array.prototype.slice.call(c.querySelectorAll('.tl-node')).forEach(function(el){ el.removeAttribute('data-tltool'); });
-    Array.prototype.slice.call(c.querySelectorAll('.tl-dot')).forEach(function(el){ el.removeAttribute('data-tlwire'); });
     Array.prototype.slice.call(c.querySelectorAll('*')).forEach(function(el){
       el.removeAttribute('data-page-node-id');
       el.removeAttribute('data-dm-ref');
@@ -1991,7 +1812,7 @@
     '<span class="nx" id="ed-note-x" title="关闭">&#10005;</span>' +
     '<div class="nl">点文字直接改（左侧字段标签已固定）</div>' +
     '<div class="nl">点卡片右上 / 行首的 <b>↑↓←→</b> 箭头调整顺序：↑↓ 调优先级，←→ 换列</div>' +
-    '<div class="nl">点时间节点圆点改颜色；状态 / 等级列是下拉</div>' +
+    '<div class="nl">状态 / 等级列是下拉</div>' +
     '<div class="fmt"><span class="fh">富文本（选中文字后点）：</span>' +
     '<button data-cmd="bold" title="加粗 Ctrl+B"><b>B</b></button>' +
     '<button data-cmd="italic" title="斜体 Ctrl+I"><i>I</i></button>' +
@@ -2045,7 +1866,7 @@
   });
 
   bindX(); bindAllNavs(); syncCounts(); syncDays(); updateBadge();
-  initTl(); wireTlNodes(); initCollapse(); initKbTools(); bindRowTools(); buildCal(); wireCal(); hideNote();
+  initCollapse(); initKbTools(); bindRowTools(); buildCal(); wireCal(); hideNote();
 })();
 </script>
 
