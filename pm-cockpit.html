@@ -118,7 +118,7 @@
 
   .card { background:#fff; border:1px solid #e3e7ee; border-radius:10px; padding:12px 13px; margin-bottom:10px; box-shadow:0 1px 2px rgba(16,24,40,.04); }
   .card:last-child { margin-bottom:0; }
-  .card .ct { font-size:13px; font-weight:700; margin-bottom:8px; line-height:1.45; }
+  .card .ct { font-size:13px; font-weight:700; margin-bottom:8px; line-height:1.45; padding-right:64px; }
   .row { display:flex; gap:8px; font-size:11.5px; margin-bottom:5px; align-items:flex-start; }
   .row:last-child { margin-bottom:0; }
   .row .k { flex:0 0 50px; color:#9ca3af; font-size:10.5px; font-weight:600; padding-top:1.5px; letter-spacing:.2px; }
@@ -290,9 +290,13 @@
   /* ---------- 卡片默认折叠（点击展开） ---------- */
   .card:not(.open) > .row:not(.keep){display:none;}
   body:not(.editing) .card .ct{cursor:pointer;}
-  .card:not(.open) .ct::after{content:'展开';background:#2563eb;color:#fff;font-size:11px;font-weight:700;padding:2px 12px;border-radius:999px;margin-left:8px;white-space:nowrap;}
-  .card.open .ct::after{content:'收起';background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe;font-size:11px;font-weight:700;padding:2px 12px;border-radius:999px;margin-left:8px;white-space:nowrap;}
-  @media print{ .card .ct::after{content:'' !important;} }
+  /* 展开 / 收起：固定在卡片右上角，不再与标题文字混排 */
+  .card .ct::after{position:absolute;top:11px;right:12px;font-size:11px;font-weight:700;padding:2px 12px;border-radius:999px;white-space:nowrap;line-height:1.5;}
+  .card:not(.open) .ct::after{content:'展开';background:#2563eb;color:#fff;}
+  .card.open .ct::after{content:'收起';background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe;}
+  /* 编辑态右上角留给 ✕ 与方向箭头；且编辑态本就不触发折叠 */
+  body.editing .card .ct::after{display:none !important;}
+  @media print{ .card .ct::after{content:'' !important;display:none !important;} }
 
   /* ---------- 卡片统一格式 / 主题色 / 字段强调 ---------- */
   .row{padding:0;}
@@ -336,7 +340,7 @@
   /* 导出图片时隐藏编辑元素 */
   body.exporting #ed-bar, body.exporting #ed-note, body.exporting #kb-tools,
   body.exporting .grip, body.exporting .card-x{display:none !important;}
-  body.exporting .ct::after{content:'' !important;}
+  body.exporting .ct::after{content:'' !important;display:none !important;}
 
   /* ---------- 当月日历 ---------- */
   .cal-hd{font-size:14px;font-weight:700;color:#16181d;}
@@ -1469,7 +1473,7 @@
     var hd = c.querySelector('head');
     if(hd && c.ownerDocument){
       var stEl = c.ownerDocument.createElement('style');
-      stEl.textContent = '.grip{display:none !important;}.ct::after{content:"" !important;}.card-x{display:none !important;}.drag-col{display:none !important;}.tgrip{display:none !important;}.row-x{display:none !important;}.row-judge{display:none !important;}';
+      stEl.textContent = '.grip{display:none !important;}.ct::after{content:"" !important;display:none !important;}.card-x{display:none !important;}.drag-col{display:none !important;}.tgrip{display:none !important;}.row-x{display:none !important;}.row-judge{display:none !important;}';
       hd.appendChild(stEl);
     }
     return c;
