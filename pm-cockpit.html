@@ -408,7 +408,7 @@
   #ed-note .fmt .fh{font-size:10px;color:#b45309;font-weight:400;}
 
   /* ---------- 表格整行拖拽 ---------- */
-  th.drag-col{width:26px;padding:6px 2px !important;}
+  th.drag-col{width:32px;padding:6px 2px !important;}
   td.drag-col{padding:0 2px !important;text-align:center;vertical-align:middle;}
   .tgrip{display:inline-block;cursor:grab;color:#cbd5e1;font-size:13px;line-height:1;user-select:none;-webkit-user-select:none;}
   .tgrip:active{cursor:grabbing;}
@@ -1092,39 +1092,13 @@
     });
   }
 
-  /* ---------- 清单行：删除 / 判定（仿卡片，仅编辑态）---------- */
+  /* ---------- 清单行：删除（仿卡片，仅编辑态）---------- */
   function bindRowTools(){
     Array.prototype.slice.call(document.querySelectorAll('tbody tr')).forEach(function(tr){
       if(tr._bound) return;
       tr._bound = true;
       var dc = tr.querySelector('td.drag-col');
       if(!dc) return;
-      var opt = tr.querySelector('td.opt');
-      if(opt){
-        var jb = document.createElement('button');
-        jb.type = 'button';
-        jb.className = 'row-judge';
-        var jlab = opt.classList.contains('ex') ? '进行中/受阻/待启动/已完成/待决策'
-                 : opt.classList.contains('st') ? '待批/待决策/待确认/条件触发'
-                 : '高/中/低/无';
-        jb.title = '判定状态：点击循环切换（' + jlab + '）';
-        jb.textContent = '\u5224';
-        jb.addEventListener('click', function(e){
-          e.stopPropagation(); e.preventDefault();
-          if(!editing) return;
-          pushUndo();
-          var o = optsOf(opt);
-          var cur = opt.getAttribute('data-v') || o[0][0];
-          var idx = 0;
-          for(var i=0;i<o.length;i++){ if(o[i][0] === cur) idx = i; }
-          var nx = o[(idx + 1) % o.length][0];
-          opt.setAttribute('data-v', nx);
-          var sl = opt.querySelector('select');
-          if(sl) sl.value = nx;
-          markDirty();
-        });
-        dc.appendChild(jb);
-      }
       var xb = document.createElement('button');
       xb.type = 'button';
       xb.className = 'row-x';
@@ -1309,15 +1283,17 @@
   }
 
   function bindCardNav(card){
-    var ct = card.querySelector('.ct'); if(!ct) return;
-    var old = ct.querySelector('.card-nav'); if(old && old.parentNode) old.parentNode.removeChild(old);
+    if(!card.querySelector('.ct')) return;
+    /* 按钮不入 .ct（编辑态 .ct 是可编辑区，按钮会被文字编辑吞掉） */
+    Array.prototype.slice.call(card.querySelectorAll('.card-nav'))
+      .forEach(function(el){ if(el.parentNode) el.parentNode.removeChild(el); });
     var nav = document.createElement('span'); nav.className = 'card-nav';
     [['up','↑','上移'],['down','↓','下移'],['left','←','左移（换列）'],['right','→','右移（换列）']].forEach(function(d){
       var b = document.createElement('button'); b.type='button'; b.className='navbtn nav-'+d[0]; b.textContent=d[1]; b.title=d[2];
       b.addEventListener('click', function(e){ e.stopPropagation(); e.preventDefault(); if(!editing) return; moveCard(card, d[0]); });
       nav.appendChild(b);
     });
-    ct.appendChild(nav);
+    card.appendChild(nav);
   }
   function siblingCard(card, dir){
     var n = dir==='up' ? card.previousElementSibling : card.nextElementSibling;
@@ -1328,7 +1304,7 @@
     var col = card.parentNode;
     if(dir==='up' || dir==='down'){
       var s = siblingCard(card, dir);
-      if(!s) return;
+      if(!s){ showToast(dir === 'up' ? '已在最上方' : '已在最下方'); return; }
       pushUndo();
       if(dir==='up') col.insertBefore(card, s); else col.insertBefore(s, card);
       syncCounts(); markDirty();
@@ -1336,7 +1312,8 @@
       var cols = Array.prototype.slice.call(document.querySelectorAll('.kb > .col'));
       var idx = cols.indexOf(col);
       var ni = dir==='left' ? idx-1 : idx+1;
-      if(ni < 0 || ni >= cols.length) return;
+      if(ni < 0){ showToast('已在最左列（已办结）'); return; }
+      if(ni >= cols.length){ showToast('已在最右列（待决策）'); return; }
       pushUndo(); cols[ni].appendChild(card); syncCounts(); markDirty();
     }
   }
@@ -1355,7 +1332,7 @@
     var tb = tr.parentNode;
     var n = dir==='up' ? tr.previousElementSibling : tr.nextElementSibling;
     while(n && n.tagName !== 'TR') n = dir==='up' ? n.previousElementSibling : n.nextElementSibling;
-    if(!n) return;
+    if(!n){ showToast(dir === 'up' ? '已在最上一行' : '已在最下一行'); return; }
     pushUndo();
     if(dir==='up') tb.insertBefore(tr, n); else tb.insertBefore(n, tr);
     markDirty();
@@ -1369,7 +1346,18 @@
 
   /* ---------- 撤销 / 恢复 ---------- */
   var UNDO = [], REDO = [], undoBusy = false, typeSess = false, typeTm = null;
-  function snap(){ var w = document.querySelector('.wrap'); return w ? w.innerHTML : ''; }
+  function snap(){
+    var w = document.querySelector('.wrap'); if(!w) return '';
+    var c = w.cloneNode(true);
+    /* 只清理运行时注入的元素（恢复时会重新注入）；.card-x 属于文档本体，必须保留 */
+    Array.prototype.slice.call(c.querySelectorAll('.card-nav, .row-nav, .row-x, .row-judge'))
+      .forEach(function(el){ if(el.parentNode) el.parentNode.removeChild(el); });
+    Array.prototype.slice.call(c.querySelectorAll('[contenteditable]'))
+      .forEach(function(el){ el.removeAttribute('contenteditable'); });
+    Array.prototype.slice.call(c.querySelectorAll('[data-page-node-id]'))
+      .forEach(function(el){ el.removeAttribute('data-page-node-id'); });
+    return c.innerHTML;
+  }
   function pushUndo(){
     if(undoBusy) return;
     UNDO.push(snap()); if(UNDO.length > 60) UNDO.shift(); REDO.length = 0;
@@ -1818,7 +1806,7 @@
     '<span class="nx" id="ed-note-x" title="关闭">&#10005;</span>' +
     '<div class="nl">点文字直接改（左侧字段标签已固定）</div>' +
     '<div class="nl">点卡片右上 / 行首的 <b>↑↓←→</b> 箭头调整顺序：↑↓ 调优先级，←→ 换列</div>' +
-    '<div class="nl">状态 / 等级列是下拉</div>' +
+    '<div class="nl">状态 / 等级列是下拉；行首 <b>✕</b> 删除该行</div>' +
     '<div class="fmt"><span class="fh">富文本（选中文字后点）：</span>' +
     '<button data-cmd="bold" title="加粗 Ctrl+B"><b>B</b></button>' +
     '<button data-cmd="italic" title="斜体 Ctrl+I"><i>I</i></button>' +
