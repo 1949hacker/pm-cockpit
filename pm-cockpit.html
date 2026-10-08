@@ -161,16 +161,14 @@
   body.editing .card{padding-right:30px;}
   /* ---------- 清单行 工具按钮（删除 / 判定，仅编辑态）---------- */
   .drag-col{display:flex;align-items:center;justify-content:center;}
-  .row-x, .row-judge{
+  .row-x{
     display:none; box-sizing:border-box; width:18px; height:18px; border-radius:5px;
     font-size:11px; font-weight:700; line-height:1; padding:0; cursor:pointer;
     border:1px solid #fecaca; background:#fff; color:#b91c1c;
   }
-  .row-judge{border-color:#bfdbfe; color:#1d4ed8;}
   .row-x:hover{background:#fee2e2;}
-  .row-judge:hover{background:#eff6ff;}
   body.editing .drag-col{flex-direction:column; gap:3px; padding:6px 2px !important;}
-  body.editing .row-x, body.editing .row-judge{display:inline-flex; align-items:center; justify-content:center;}
+  body.editing .row-x{display:inline-flex; align-items:center; justify-content:center;}
 
   /* ---------- 拖拽浮层 / 方向步进按钮 / 行折叠 ---------- */
   .grip, .tgrip{touch-action:none;}
@@ -182,10 +180,7 @@
     font-size:11px;font-weight:700;line-height:1;padding:0;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;}
   .navbtn:hover{background:#eff6ff;border-color:#2563eb;color:#1d4ed8;}
   .navbtn:active{transform:scale(.92);}
-  .kb-ghost{position:fixed;z-index:9999;pointer-events:none;opacity:.92;box-shadow:0 12px 30px rgba(15,23,42,.3);border-radius:10px;}
-  .row-ghost{position:fixed;z-index:9999;pointer-events:none;opacity:.92;box-shadow:0 12px 30px rgba(15,23,42,.3);}
-  .row-ghost td{border:none !important;}
-  @media print{ .card-nav,.row-nav,.navbtn,.kb-ghost,.row-ghost{display:none !important;} }
+  @media print{ .card-nav,.row-nav,.navbtn{display:none !important;} }
   @media (max-width:768px){ .card-nav{right:28px;} }
 
   /* ---------- TIMELINE ---------- */
@@ -209,7 +204,7 @@
   body.editing [contenteditable="true"]{outline:1px dashed #cbd5e1;outline-offset:2px;border-radius:4px;}
   body.editing [contenteditable="true"]:hover{outline-color:#2563eb;background:#f8fafc;}
   body.editing [contenteditable="true"]:focus{outline:2px solid #2563eb;background:#fff;}
-  @media print{ #ed-bar,#ed-note,#ed-toast,.card-x,.row-x,.row-judge{display:none !important;} }
+  @media print{ #ed-bar,#ed-note,#ed-toast,.card-x,.row-x{display:none !important;} }
   @media (max-width:1100px) { .kb { grid-template-columns:repeat(2,1fr); } }
   @media (max-width:640px) {
     body { padding:16px 12px 40px; }
@@ -280,8 +275,6 @@
   .col.c2 .card{border-left-color:#2563eb;}
   .col.c3 .card{border-left-color:#d97706;}
   .col.c4 .card{border-left-color:#dc2626;}
-  .kb-ph{height:14px;background:#cbd5e1;border:1px dashed #94a3b8;border-radius:8px;margin-bottom:10px;opacity:.75;}
-  .card.dragging{opacity:.45;}
   @media print{ .grip{display:none !important;} }
 
   /* ---------- 隐藏拖拽柄 ---------- */
@@ -407,13 +400,20 @@
   #ed-note .fmt button:hover{background:#fef3c7;}
   #ed-note .fmt .fh{font-size:10px;color:#b45309;font-weight:400;}
 
+  /* ---------- 栏内加卡 / 表尾加行（仅编辑态） ---------- */
+  .col-add,.tbl-add{display:none;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;
+    border:1.5px dashed #94a3b8;border-radius:8px;background:transparent;color:#64748b;
+    padding:7px 10px;text-align:center;line-height:1.4;}
+  .col-add{width:100%;}
+  .tbl-add{margin:6px 0 2px;padding:5px 14px;}
+  .col-add:hover,.tbl-add:hover{border-color:#2563eb;color:#1d4ed8;background:#eff6ff;}
+  body.editing .col-add,body.editing .tbl-add{display:block;}
+  body.exporting .col-add,body.exporting .tbl-add{display:none !important;}
+  @media print{.col-add,.tbl-add{display:none !important;}}
+
   /* ---------- 表格整行拖拽 ---------- */
   th.drag-col{width:32px;padding:6px 2px !important;}
   td.drag-col{padding:0 2px !important;text-align:center;vertical-align:middle;}
-  .tgrip{display:inline-block;cursor:grab;color:#cbd5e1;font-size:13px;line-height:1;user-select:none;-webkit-user-select:none;}
-  .tgrip:active{cursor:grabbing;}
-  tr.row-dragging{opacity:.4;}
-  .row-ph td{padding:0 !important;border:1px dashed #94a3b8;background:#f1f5f9;height:8px;}
   @media print{ .drag-col{display:none !important;} .tgrip{display:none !important;} }
 
   /* ---------- 工具条：收起为「菜单」方块，点击即展开 ---------- */
@@ -485,10 +485,10 @@
             <div style="margin-top:5px;">日期　<input type="date" class="cd-inp" id="cd-next-date" value="示例"></div>
           </div>
         </div>
-        <div class="kpi g" data-sync="c1" data-kjump="1" title="点击跳转到进展看板"><div class="n">2</div><div class="l">已办结 / 已移交</div></div>
-        <div class="kpi b" data-sync="c2" data-kjump="1" title="点击跳转到进展看板"><div class="n">3</div><div class="l">进行中</div></div>
-        <div class="kpi a" data-sync="c3" data-kjump="1" title="点击跳转到进展看板"><div class="n">3</div><div class="l">受阻 / 待启动</div></div>
-        <div class="kpi r" data-sync="c4" data-kjump="1" title="点击跳转到进展看板"><div class="n">4</div><div class="l">待决策</div></div>
+        <div class="kpi g" data-sync="c1" title="点击跳转到进展看板"><div class="n">2</div><div class="l">已办结 / 已移交</div></div>
+        <div class="kpi b" data-sync="c2" title="点击跳转到进展看板"><div class="n">3</div><div class="l">进行中</div></div>
+        <div class="kpi a" data-sync="c3" title="点击跳转到进展看板"><div class="n">3</div><div class="l">受阻 / 待启动</div></div>
+        <div class="kpi r" data-sync="c4" title="点击跳转到进展看板"><div class="n">4</div><div class="l">待决策</div></div>
       </div>
 
       <div class="onething">
@@ -1017,8 +1017,7 @@
     i.onchange = function(){ pushUndo(); el.setAttribute('data-d', i.value); markDirty(); };
   }
 
-  var editing = false, dirty = false, lastCtx = null, fileHandle = null;
-  var dragCard = null, dragRow = null;
+  var editing = false, dirty = false, fileHandle = null;
 
   function all(){ return Array.prototype.slice.call(document.querySelectorAll(SEL)); }
 
@@ -1107,6 +1106,8 @@
       xb.addEventListener('click', function(e){
         e.stopPropagation(); e.preventDefault();
         if(!editing) return;
+        var tb0 = tr.parentNode;
+        if(tb0 && tb0.querySelectorAll('tr').length <= 1){ showToast('\u81f3\u5c11\u4fdd\u7559\u4e00\u884c\u4f5c\u4e3a\u52a0\u884c\u6a21\u677f'); return; }
         if(confirm('\u5220\u9664\u8fd9\u4e00\u884c\uff1f\u6b64\u64cd\u4f5c\u53ef\u7528\u300c\u64a4\u9500\u300d\u6062\u590d')){
           pushUndo();
           if(tr.parentNode) tr.parentNode.removeChild(tr);
@@ -1121,8 +1122,13 @@
     if(on && !editing) pushUndo();
     editing = on;
     document.body.classList.toggle('editing', on);
+    if(on){
+      Array.prototype.slice.call(document.querySelectorAll('.card')).forEach(function(c){
+        c.setAttribute('data-was-open', c.classList.contains('open') ? '1' : '0');
+      });
+    }
     all().forEach(function(el){
-      if(on){ if(!el.classList.contains('opt') && !el.classList.contains('nod-v') && !el.classList.contains('due-cell') && !el.classList.contains('drag-col')) el.setAttribute('contenteditable','true'); }
+      if(on){ if(!el.classList.contains('opt') && !el.classList.contains('nod-v') && !el.classList.contains('due-cell') && !el.classList.contains('drag-col') && !el.querySelector('.nod-v')) el.setAttribute('contenteditable','true'); }
       else el.removeAttribute('contenteditable');
     });
     Array.prototype.slice.call(document.querySelectorAll('td.opt')).forEach(function(el){
@@ -1135,20 +1141,18 @@
       if(on) dueEdit(el); else dueBadge(el);
     });
     bindX(); syncCounts(); syncDays(); updateBadge();
-    expandAll(on);
+    if(on) expandAll(true);
+    else{
+      Array.prototype.slice.call(document.querySelectorAll('.card[data-was-open]')).forEach(function(c){
+        c.classList.toggle('open', c.getAttribute('data-was-open') === '1');
+        c.removeAttribute('data-was-open');
+      });
+      syncKbBtn();
+    }
     if(on){ var nn = document.getElementById('ed-note'); if(nn) nn.dataset.closed = '0'; showNote(); }
     else hideNote();
     if(on && bar.classList.contains('mini')) setBarState('open');
   }
-
-  document.addEventListener('click', function(e){
-    var t = e.target;
-    if(!t || !t.closest) return;
-    var td = t.closest('td');
-    if(td){ lastCtx = {type:'row', node: td.parentNode}; return; }
-    var cd = t.closest('.card');
-    if(cd){ lastCtx = {type:'card', node: cd}; }
-  }, true);
 
   document.addEventListener('input',  function(e){
     if(!editing) return;
@@ -1191,30 +1195,6 @@
     });
     Array.prototype.slice.call(root.querySelectorAll('tbody > br, thead > br, table > br'))
       .forEach(function(b){ if(b.parentNode) b.parentNode.removeChild(b); });
-  }
-
-  function addItem(){
-    if(!editing || !lastCtx){ alert('请先按「编辑」，然后点一下要复制的那一行（或那张卡）'); return; }
-    var n = lastCtx.node.cloneNode(true);
-    Array.prototype.slice.call(n.querySelectorAll('*')).forEach(function(el){
-      el.removeAttribute('contenteditable');
-    });
-    if(lastCtx.type === 'row'){
-      Array.prototype.slice.call(n.children).forEach(function(td){
-        if(td.classList.contains('drag-col')) return;
-        td.innerHTML = '';
-      });
-    }else{
-      Array.prototype.slice.call(n.querySelectorAll('.ct')).forEach(function(ct){
-        var g = ct.querySelector('.grip'); ct.innerHTML = g ? g.outerHTML : '';
-      });
-      Array.prototype.slice.call(n.querySelectorAll('.k, .v')).forEach(function(x){ x.innerHTML = ''; });
-    }
-    pushUndo();
-    lastCtx.node.parentNode.insertBefore(n, lastCtx.node.nextSibling);
-    n.removeAttribute('data-tg'); initCollapse();
-    if(n.classList.contains('card')) bindCardNav(n); else if(n.tagName === 'TR') bindRowNav(n);
-    setEdit(true); markDirty();
   }
 
   function makeDrag(handle, box){
@@ -1315,6 +1295,7 @@
       if(ni < 0){ showToast('已在最左列（已办结）'); return; }
       if(ni >= cols.length){ showToast('已在最右列（待决策）'); return; }
       pushUndo(); cols[ni].appendChild(card); syncCounts(); markDirty();
+      try{ card.scrollIntoView({behavior:'smooth', block:'nearest'}); }catch(_){}
     }
   }
   function bindRowNav(tr){
@@ -1338,6 +1319,69 @@
     markDirty();
   }
 
+  /* ---------- 栏内加卡 / 表尾加行（替代旧「加卡」按钮，不再依赖先点选） ---------- */
+  var CARD_TPL =
+    '<button class="card-x" title="\u5220\u9664\u8fd9\u5f20\u5361">\u2715</button>' +
+    '<div class="ct"></div>' +
+    '<div class="row own"><div class="k">\u6267\u884c\u4eba</div><div class="v"></div></div>' +
+    '<div class="row src"><div class="k">\u6765\u6e90</div><div class="v"></div></div>' +
+    '<div class="row dsc"><div class="k">\u8bf4\u660e</div><div class="v"></div></div>' +
+    '<div class="row need keep"><div class="k">\u9700\u6c42</div><div class="v"></div></div>' +
+    '<div class="row blk"><div class="k">\u5361\u70b9</div><div class="v"></div></div>' +
+    '<div class="row imp"><div class="k">\u5f71\u54cd</div><div class="v"></div></div>' +
+    '<div class="row evi"><div class="k">\u4f9d\u636e</div><div class="v"></div></div>' +
+    '<div class="row std"><div class="k">\u5b8c\u6210\u6807\u51c6</div><div class="v"></div></div>' +
+    '<div class="row nod"><div class="k">\u8282\u70b9</div><div class="v"><div class="v nod-v" data-st="n" data-d=""></div></div></div>';
+  function addCardTo(col){
+    pushUndo();
+    var card = document.createElement('div');
+    card.className = 'card open';
+    card.innerHTML = CARD_TPL;
+    col.insertBefore(card, col.querySelector('.col-add'));
+    bindCardNav(card); initCollapse();
+    setEdit(true); markDirty();
+    try{ card.scrollIntoView({behavior:'smooth', block:'nearest'}); }catch(_){}
+    showToast('\u5df2\u52a0\u5361\uff0c\u64a4\u9500\u53ef\u56de\u9000');
+  }
+  function addRowTo(tb){
+    if(!tb) return;
+    var rows = tb.querySelectorAll('tr');
+    if(!rows.length){ showToast('\u8be5\u8868\u6ca1\u6709\u53ef\u590d\u5236\u7684\u884c\u6a21\u677f'); return; }
+    pushUndo();
+    var n = rows[rows.length - 1].cloneNode(true);
+    Array.prototype.slice.call(n.querySelectorAll('.row-x, .row-nav')).forEach(function(el){ if(el.parentNode) el.parentNode.removeChild(el); });
+    Array.prototype.slice.call(n.children).forEach(function(td){
+      if(td.classList.contains('drag-col')) return;
+      td.innerHTML = '';
+    });
+    Array.prototype.slice.call(n.querySelectorAll('td.opt')).forEach(function(el){
+      el.setAttribute('data-v', el.classList.contains('ex') ? 'n' : (el.classList.contains('st') ? 'b' : 'g'));
+    });
+    Array.prototype.slice.call(n.querySelectorAll('td.due-cell')).forEach(function(el){ el.setAttribute('data-d', ''); });
+    tb.appendChild(n);
+    bindRowTools(); bindRowNav(n);
+    setEdit(true); markDirty();
+    try{ n.scrollIntoView({behavior:'smooth', block:'nearest'}); }catch(_){}
+    showToast('\u5df2\u52a0\u884c\uff0c\u64a4\u9500\u53ef\u56de\u9000');
+  }
+  function bindAdders(){
+    Array.prototype.slice.call(document.querySelectorAll('.kb > .col')).forEach(function(col){
+      if(col.querySelector('.col-add')) return;
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'col-add'; b.textContent = '\uff0b \u52a0\u5361';
+      b.addEventListener('click', function(e){ e.stopPropagation(); e.preventDefault(); if(!editing) return; addCardTo(col); });
+      col.appendChild(b);
+    });
+    Array.prototype.slice.call(document.querySelectorAll('.wrap table')).forEach(function(tb){
+      var nx = tb.nextElementSibling;
+      if(nx && nx.classList && nx.classList.contains('tbl-add')) return;
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'tbl-add'; b.textContent = '\uff0b \u52a0\u884c';
+      b.addEventListener('click', function(e){ e.stopPropagation(); e.preventDefault(); if(!editing) return; addRowTo(tb.querySelector('tbody') || tb); });
+      tb.parentNode.insertBefore(b, tb.nextSibling);
+    });
+  }
+
   /* ---------- 方向步进按钮统一绑定（拖拽已移除，改用箭头） ---------- */
   function bindAllNavs(){
     Array.prototype.slice.call(document.querySelectorAll('.card')).forEach(function(c){ bindCardNav(c); });
@@ -1350,12 +1394,28 @@
     var w = document.querySelector('.wrap'); if(!w) return '';
     var c = w.cloneNode(true);
     /* 只清理运行时注入的元素（恢复时会重新注入）；.card-x 属于文档本体，必须保留 */
-    Array.prototype.slice.call(c.querySelectorAll('.card-nav, .row-nav, .row-x, .row-judge'))
+    Array.prototype.slice.call(c.querySelectorAll('.card-nav, .row-nav, .row-x, .col-add, .tbl-add'))
       .forEach(function(el){ if(el.parentNode) el.parentNode.removeChild(el); });
     Array.prototype.slice.call(c.querySelectorAll('[contenteditable]'))
       .forEach(function(el){ el.removeAttribute('contenteditable'); });
     Array.prototype.slice.call(c.querySelectorAll('[data-page-node-id]'))
       .forEach(function(el){ el.removeAttribute('data-page-node-id'); });
+    /* 编辑态控件归一为徽章形态，避免浏览态撤销后残留裸控件 */
+    Array.prototype.slice.call(c.querySelectorAll('td.opt')).forEach(function(el){
+      var sl = el.querySelector('select'); if(sl) el.setAttribute('data-v', sl.value);
+      optBadge(el);
+    });
+    Array.prototype.slice.call(c.querySelectorAll('.nod-v')).forEach(function(el){
+      var nsl = el.querySelector('select'), ninp = el.querySelector('input.nod-inp');
+      if(nsl) el.setAttribute('data-st', nsl.value);
+      if(ninp) el.setAttribute('data-d', ninp.value);
+      nodBadge(el);
+    });
+    Array.prototype.slice.call(c.querySelectorAll('td.due-cell')).forEach(function(el){
+      var dinp = el.querySelector('input.due-inp');
+      if(dinp) el.setAttribute('data-d', dinp.value);
+      dueBadge(el);
+    });
     return c.innerHTML;
   }
   function pushUndo(){
@@ -1375,9 +1435,7 @@
     Array.prototype.slice.call(document.querySelectorAll('tbody')).forEach(function(t){
       t.removeAttribute('data-trb');
     });
-    clearRowPh();
-    bindX(); bindAllNavs(); initCollapse(); initKbTools(); bindRowTools(); wireDate(); wireCal(); buildCal(); syncCounts(); syncDays();
-    lastCtx = null;
+    bindX(); bindAllNavs(); initCollapse(); initKbTools(); bindRowTools(); bindAdders(); wireDate(); wireCal(); buildCal(); syncCounts(); syncDays();
   }
   function restore(h){
     var w = document.querySelector('.wrap'); if(!w) return;
@@ -1398,8 +1456,10 @@
   function wireDate(){
     var di = document.getElementById('cd-next-date');
     if(!di) return;
-    di.addEventListener('focus',  function(){ pushUndo(); });
-    di.addEventListener('change', function(){ syncDays(); markDirty(); });
+    di.addEventListener('change', function(){
+      if(di.value === di.getAttribute('value')) return;
+      pushUndo(); di.setAttribute('value', di.value); syncDays(); markDirty();
+    });
     di.addEventListener('input',  syncDays);
   }
 
@@ -1444,8 +1504,8 @@
       if(dinp) el.setAttribute('data-d', dinp.value);
       dueBadge(el);
     });
-    Array.prototype.slice.call(c.querySelectorAll('.row-x, .row-judge')).forEach(function(el){ if(el.parentNode) el.parentNode.removeChild(el); });
-    Array.prototype.slice.call(c.querySelectorAll('.card-nav, .row-nav')).forEach(function(el){ if(el.parentNode) el.parentNode.removeChild(el); });
+    Array.prototype.slice.call(c.querySelectorAll('.row-x')).forEach(function(el){ if(el.parentNode) el.parentNode.removeChild(el); });
+    Array.prototype.slice.call(c.querySelectorAll('.card-nav, .row-nav, .col-add, .tbl-add')).forEach(function(el){ if(el.parentNode) el.parentNode.removeChild(el); });
     Array.prototype.slice.call(c.querySelectorAll('tbody tr')).forEach(function(tr){ Array.prototype.slice.call(tr.children).forEach(function(td){ td.style.display=''; td.removeAttribute('colspan'); }); });
     Array.prototype.slice.call(c.querySelectorAll('.card')).forEach(function(el){ el.removeAttribute('data-dnd'); el.removeAttribute('data-tg'); });
     Array.prototype.slice.call(c.querySelectorAll('.col')).forEach(function(el){ el.removeAttribute('data-dndc'); });
@@ -1453,6 +1513,7 @@
     Array.prototype.slice.call(c.querySelectorAll('tbody tr')).forEach(function(el){ el.removeAttribute('data-rtool'); el.removeAttribute('data-rrow'); el.removeAttribute('data-rtg'); el.removeAttribute('data-rclk'); });
     Array.prototype.slice.call(c.querySelectorAll('*')).forEach(function(el){
       el.removeAttribute('data-page-node-id'); el.removeAttribute('data-dm-ref');
+      el.removeAttribute('data-kjump'); el.removeAttribute('data-was-open');
     });
     tidy(c);
     var hd = c.querySelector('head');
@@ -1528,8 +1589,8 @@
     syncKbBtn();
     /* L0 统计卡点击 → 跳转进展看板 */
     document.querySelectorAll('.kpi[data-sync]').forEach(function(k){
-      if(k.dataset.kjump) return;
-      k.dataset.kjump = '1';
+      if(k._kjump) return;
+      k._kjump = true;
       k.title = '点击跳转到进展看板';
       k.addEventListener('click', function(){
         host.scrollIntoView({behavior:'smooth', block:'start'});
@@ -1620,7 +1681,10 @@
   function wireCal(){
     var mi = document.getElementById('cal-month');
     if(mi){
-      mi.addEventListener('change', function(){ buildCal(); markDirty(); });
+      mi.addEventListener('change', function(){
+        if(mi.value !== mi.getAttribute('value')){ pushUndo(); mi.setAttribute('value', mi.value); }
+        buildCal(); markDirty();
+      });
       mi.addEventListener('input',  function(){ buildCal(); });
     }
     var b = document.getElementById('calToggle');
@@ -1637,28 +1701,6 @@
     });
   }
 
-  /* ---------- 表格整行拖拽（跨行排序） ---------- */
-  function getRowPh(tb){
-    var p = tb.querySelector('.row-ph');
-    if(!p){
-      p = document.createElement('tr'); p.className = 'row-ph';
-      var td = document.createElement('td');
-      td.colSpan = (tb.rows.length && tb.rows[0].cells.length) ? tb.rows[0].cells.length : 5;
-      p.appendChild(td);
-    }
-    return p;
-  }
-  function clearRowPh(){ var p = document.querySelector('.row-ph'); if(p && p.parentNode) p.parentNode.removeChild(p); }
-  function getTrAfter(tb, y){
-    var rows = Array.prototype.slice.call(tb.querySelectorAll('tr:not(.row-dragging):not(.row-ph)'));
-    var closest = {dist: -Infinity, el: null};
-    rows.forEach(function(r){
-      var box = r.getBoundingClientRect();
-      var off = y - box.top - box.height/2;
-      if(off < 0 && off > closest.dist){ closest = {dist: off, el: r}; }
-    });
-    return closest.el;
-  }
   function stamp(){
     var d = new Date(), z = function(v){ return (v < 10 ? '0' : '') + v; };
     return d.getFullYear() + z(d.getMonth() + 1) + z(d.getDate()) + '_' + z(d.getHours()) + z(d.getMinutes());
@@ -1707,8 +1749,8 @@
       if(dinp) el.setAttribute('data-d', dinp.value);
       dueBadge(el);
     });
-    Array.prototype.slice.call(c.querySelectorAll('.row-x, .row-judge')).forEach(function(el){ if(el.parentNode) el.parentNode.removeChild(el); });
-    Array.prototype.slice.call(c.querySelectorAll('.card-nav, .row-nav')).forEach(function(el){ if(el.parentNode) el.parentNode.removeChild(el); });
+    Array.prototype.slice.call(c.querySelectorAll('.row-x')).forEach(function(el){ if(el.parentNode) el.parentNode.removeChild(el); });
+    Array.prototype.slice.call(c.querySelectorAll('.card-nav, .row-nav, .col-add, .tbl-add')).forEach(function(el){ if(el.parentNode) el.parentNode.removeChild(el); });
     Array.prototype.slice.call(c.querySelectorAll('tbody tr')).forEach(function(tr){ Array.prototype.slice.call(tr.children).forEach(function(td){ td.style.display=''; td.removeAttribute('colspan'); }); });
     Array.prototype.slice.call(c.querySelectorAll('.card')).forEach(function(el){ el.removeAttribute('data-dnd'); el.removeAttribute('data-tg'); });
     Array.prototype.slice.call(c.querySelectorAll('.col')).forEach(function(el){ el.removeAttribute('data-dndc'); });
@@ -1717,6 +1759,8 @@
     Array.prototype.slice.call(c.querySelectorAll('*')).forEach(function(el){
       el.removeAttribute('data-page-node-id');
       el.removeAttribute('data-dm-ref');
+      el.removeAttribute('data-kjump');
+      el.removeAttribute('data-was-open');
     });
     tidy(c);
     var html = '<!DOCTYPE html>\n' + c.outerHTML;
@@ -1771,7 +1815,6 @@
   bar.innerHTML =
     '<div id="ed-row">' +
     '<button id="bEd">编辑</button>' +
-    '<button id="bAdd">加卡</button>' +
     '<button id="bUndo" title="Ctrl+Z">撤销</button>' +
     '<button id="bRedo" title="Ctrl+Y">恢复</button>' +
     '<span class="sp"></span>' +
@@ -1806,6 +1849,7 @@
     '<span class="nx" id="ed-note-x" title="关闭">&#10005;</span>' +
     '<div class="nl">点文字直接改（左侧字段标签已固定）</div>' +
     '<div class="nl">点卡片右上 / 行首的 <b>↑↓←→</b> 箭头调整顺序：↑↓ 调优先级，←→ 换列</div>' +
+    '<div class="nl">每栏底部 <b>＋加卡</b>、每表尾部 <b>＋加行</b>（空栏也能直接加）</div>' +
     '<div class="nl">状态 / 等级列是下拉；行首 <b>✕</b> 删除该行</div>' +
     '<div class="fmt"><span class="fh">富文本（选中文字后点）：</span>' +
     '<button data-cmd="bold" title="加粗 Ctrl+B"><b>B</b></button>' +
@@ -1835,7 +1879,6 @@
     }
     setEdit(!editing);
   };
-  document.getElementById('bAdd').onclick  = addItem;
   document.getElementById('bUndo').onclick = undo;
   document.getElementById('bRedo').onclick = redo;
   document.getElementById('bSave').onclick = save;
@@ -1860,7 +1903,7 @@
   });
 
   bindX(); bindAllNavs(); syncCounts(); syncDays(); updateBadge();
-  initCollapse(); initKbTools(); bindRowTools(); buildCal(); wireCal(); hideNote();
+  initCollapse(); initKbTools(); bindRowTools(); bindAdders(); buildCal(); wireCal(); hideNote();
 })();
 </script>
 
